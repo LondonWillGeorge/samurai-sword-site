@@ -1,4 +1,4 @@
-import heroBg from '@/assets/hero-bg.jpg';
+import heroBg from '@/assets/Tori_Gate_Royalty_Free_Cropped.jpeg';
 
 export const HeroSection = () => {
   return (
