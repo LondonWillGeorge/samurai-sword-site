@@ -19,8 +19,8 @@ export const HeroSection = () => {
         </p>
         
         <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-light tracking-wide mb-6 animate-slide-up">
-          <span className="block text-foreground">Yodokan</span>
-          <span className="block text-primary mt-2">居合道</span>
+          <span className="block text-foreground">Tenshin Ryu</span>
+          <span className="block text-primary mt-2">天心流</span>
         </h1>
         
         <div className="section-divider mb-8" />
