@@ -4,8 +4,8 @@ export const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center text-center">
           <div className="font-heading text-3xl mb-4">
-            <span className="text-primary">養</span>
-            <span className="text-foreground">道館</span>
+            <span className="text-primary">天</span>
+            <span className="text-foreground">心流</span>
           </div>
           
           <p className="text-muted-foreground text-sm max-w-md mb-6">
