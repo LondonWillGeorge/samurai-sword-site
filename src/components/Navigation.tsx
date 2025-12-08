@@ -18,7 +18,7 @@ export const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <a href="#" className="font-heading text-xl tracking-wider text-foreground">
-            <span className="text-primary">養</span>道館
+            <span className="text-primary">天</span>心流
           </a>
 
           {/* Desktop Navigation */}
