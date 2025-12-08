@@ -14,7 +14,7 @@ export const HeroSection = () => {
       
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <p className="text-primary tracking-[0.3em] text-sm mb-4 animate-fade-in">
+        <p className="text-primary tracking-[0.3em] text-sm font-semibold mb-4 animate-fade-in">
           THE ART OF THE SAMURAI SWORD
         </p>
         
