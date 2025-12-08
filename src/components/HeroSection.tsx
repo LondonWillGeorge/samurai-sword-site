@@ -26,7 +26,9 @@ export const HeroSection = () => {
         <div className="section-divider mb-8" />
         
         <p className="text-muted-foreground text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mb-10 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-          The way of harmonising oneself in action through the ancient arts of Iaido, Iaijutsu, and Kobudo
+          The way of harmonising oneself in action through the ancient arts of Iaido, Iaijutsu, and Kobudo<br/>
+          Train with us in Carshalton, South London, in the art of the Japanese sword. Complete beginners and experienced martial artists welcome - free trial available<br/>
+          If you don't try, you will never know
         </p>
         
         <a
