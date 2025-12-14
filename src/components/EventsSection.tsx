@@ -56,7 +56,7 @@ export const EventsSection = () => {
             Interested in attending an event or starting your training?
           </p>
           <a
-            href="#schools"
+            href="/schools"
             className="inline-block px-8 py-3 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-300 tracking-widest text-sm uppercase"
           >
             Find a School
