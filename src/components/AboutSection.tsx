@@ -10,6 +10,17 @@ export const AboutSection = () => {
             The Path of the Sword
           </h2>
           <div className="section-divider" />
+          
+          {/* Mobile image - below the red line */}
+          <div className="lg:hidden mt-8 mb-8">
+            <div className="japanese-border p-4 bg-card max-w-sm mx-auto">
+              <img
+                src={iaidoIllustration}
+                alt="Iaido illustration"
+                className="w-full h-auto"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
@@ -45,7 +56,8 @@ export const AboutSection = () => {
             </div>
           </div>
 
-          <div className="relative">
+          {/* Desktop image - hidden on mobile */}
+          <div className="relative hidden lg:block">
             <div className="japanese-border p-4 bg-card">
               <img
                 src={iaidoIllustration}

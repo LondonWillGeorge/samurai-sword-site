@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Lineage from "./pages/Lineage";
+import OgawaKinnosuke from "./pages/masters/OgawaKinnosuke";
+import AbbeKenshiro from "./pages/masters/AbbeKenshiro";
+import OtaniTomio from "./pages/masters/OtaniTomio";
 import Instructors from "./pages/Instructors";
 import Gallery from "./pages/Gallery";
 import Schools from "./pages/Schools";
@@ -22,6 +25,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/lineage" element={<Lineage />} />
+          <Route path="/lineage/ogawa-kinnosuke" element={<OgawaKinnosuke />} />
+          <Route path="/lineage/abbe-kenshiro" element={<AbbeKenshiro />} />
+          <Route path="/lineage/otani-tomio" element={<OtaniTomio />} />
           <Route path="/instructors" element={<Instructors />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/schools" element={<Schools />} />
