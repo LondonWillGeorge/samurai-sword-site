@@ -1,17 +1,17 @@
 import { Navigation } from '@/components/Navigation';
-import { HeroSection } from '@/components/HeroSection';
-import { AboutSection } from '@/components/AboutSection';
+import { LineageSection } from '@/components/LineageSection';
 import { Footer } from '@/components/Footer';
 
-const Index = () => {
+const Lineage = () => {
   return (
     <main className="min-h-screen bg-background">
       <Navigation />
-      <HeroSection />
-      <AboutSection />
+      <div className="pt-16">
+        <LineageSection />
+      </div>
       <Footer />
     </main>
   );
 };
 
-export default Index;
+export default Lineage;
