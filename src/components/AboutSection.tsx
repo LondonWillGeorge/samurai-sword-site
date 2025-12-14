@@ -1,4 +1,4 @@
-import iaidoIllustration from '@/assets/iaido-illustration.png';
+import iaidoIllustration from '@/assets/iaido_xingshu_no5_cropped.png';
 
 export const AboutSection = () => {
   return (
@@ -19,7 +19,10 @@ export const AboutSection = () => {
             </p>
             
             <p>
-              An in-depth reading of the Japanese characters: <span className="text-primary">I</span> = being, <span className="text-primary">AI</span> = harmony, <span className="text-primary">DO</span> = way. "The way of harmonising oneself in action".
+              An in-depth reading of the Japanese characters:<br/>
+              <span className="text-primary">I</span> = being, <br/>
+              <span className="text-primary">AI</span> = harmony<br/>
+              <span className="text-primary">DO</span> = way. "The way of harmonising oneself in action".
             </p>
 
             <p>
