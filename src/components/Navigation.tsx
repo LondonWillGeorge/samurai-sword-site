@@ -197,13 +197,13 @@ export const Navigation = () => {
           <div className="md:hidden py-4 border-t border-border">
             {/* Mobile contact info */}
             <div className="flex flex-col gap-2 pb-4 mb-4 border-b border-border text-xs text-muted-foreground">
-              <a href="mailto:info@tenshinryu.co.uk" className="flex items-center gap-1.5">
+              <a href="mailto:tenshinryu@hotmail.co.uk" className="flex items-center gap-1.5">
                 <Mail size={12} />
-                info@tenshinryu.co.uk
+                tenshinryu@hotmail.co.uk
               </a>
-              <a href="tel:+4402012345678" className="flex items-center gap-1.5">
+              <a href="tel:07715255150" className="flex items-center gap-1.5">
                 <Phone size={12} />
-                +44 (0) 20 1234 5678
+                0771 5255150
               </a>
             </div>
             {navItems.map(renderMobileNavLink)}
