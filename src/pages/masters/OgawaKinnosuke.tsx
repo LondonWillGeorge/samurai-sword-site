@@ -1,6 +1,6 @@
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
-import ogawaKinnosuke from '@/assets/ogawa-kinnosuke.png';
+import ogawaKinnosuke from '@/assets/ogawa kinnosuke.jpg';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
