@@ -188,7 +188,7 @@ export const GallerySection = () => {
           <div className="text-center mb-12">
             <p className="text-primary tracking-[0.3em] text-sm mb-4">VIDEOS</p>
             <h3 className="font-heading text-3xl md:text-4xl text-foreground mb-4">
-              In Motion
+              Tenshin In Motion
             </h3>
             <div className="section-divider" />
           </div>
@@ -196,7 +196,7 @@ export const GallerySection = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <VideoWithSpeedControl 
               videoId="4LcpgyGT9_Y" 
-              caption="Iaido Training" 
+              caption="Jo (4-foot staff) Kata" 
             />
             <VideoPlaceholder />
             <VideoPlaceholder />
