@@ -1,6 +1,6 @@
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
-import abbeKenshiro from '@/assets/abbe-kenshiro.jpg';
+import abbeKenshiro from '@/assets/sensei Abbe kenshiro.jpg';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
