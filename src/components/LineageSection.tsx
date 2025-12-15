@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import ogawaKinnosuke from '@/assets/ogawa-kinnosuke.png';
-import abbeKenshiro from '@/assets/abbe-kenshiro.jpg';
+import ogawaKinnosuke from '@/assets/ogawa kinnosuke.jpg';
+import abbeKenshiro from '@/assets/sensei Abbe kenshiro.jpg';
 import otaniTomio from '@/assets/otani-tomio.jpg';
 
 const lineageMembers = [
