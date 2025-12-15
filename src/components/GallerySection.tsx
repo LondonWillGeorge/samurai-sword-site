@@ -1,15 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import trainingSeminar from '@/assets/training-seminar.jpg';
-import shihanPose from '@/assets/shihan-iaido-pose.jpg';
-import otaniTomio from '@/assets/otani-tomio.jpg';
-import abbeKenshiro from '@/assets/abbe-kenshiro.jpg';
+import otaniDemoAikido from '@/assets/Otani_Tomio_Demo_Aikido.png';
+import fierceIaidokaPoster from '@/assets/1983_Hand_Drawn_Yodokan_Poster_450px.jpeg';
 import { Slider } from '@/components/ui/slider';
 
 const galleryImages = [
-  { src: trainingSeminar, alt: 'Combined training seminar', caption: 'Combined Training Seminar' },
-  { src: shihanPose, alt: 'Shihan performing iaido', caption: 'Iaido Demonstration' },
-  { src: otaniTomio, alt: 'Otani Sensei', caption: 'Otani Tomio Sensei' },
-  { src: abbeKenshiro, alt: 'Abbe Kenshiro Sensei', caption: 'Abbe Kenshiro Sensei' },
+  { src: trainingSeminar, alt: 'Kagami Biraki 2022 Japanese New Year', caption: 'Kagami Biraki 2022 Japanese New Year' },
+  { src: otaniDemoAikido, alt: 'Otani Tomio Demonstrating Aikido c.1982', caption: 'Otani Tomio Demonstrating Aikido c.1982' },
+  { src: fierceIaidokaPoster, alt: '1983 Yodokan Club Poster - Hand Drawn', caption: '1983 Yodokan Club Poster - Hand Drawn' },
 ];
 
 // YouTube IFrame API types
