@@ -160,13 +160,13 @@ export const Navigation = () => {
       <div className="hidden md:block border-b border-border/50 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="flex justify-end items-center h-8 gap-6 text-xs text-muted-foreground">
-            <a href="mailto:info@tenshinryu.co.uk" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+            <a href="mailto:tenshinryu@hotmail.co.uk" className="flex items-center gap-1.5 hover:text-primary transition-colors">
               <Mail size={12} />
               info@tenshinryu.co.uk
             </a>
-            <a href="tel:+441onal234567890" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+            <a href="tel:07715255150" className="flex items-center gap-1.5 hover:text-primary transition-colors">
               <Phone size={12} />
-              +44 (0) 20 1234 5678
+              0771 5255150
             </a>
           </div>
         </div>
