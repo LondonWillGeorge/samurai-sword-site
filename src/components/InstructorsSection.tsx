@@ -22,9 +22,6 @@ export const InstructorsSection = () => {
                   className="w-full h-auto"
                 />
               </div>
-              <div className="absolute -top-4 -left-4 text-8xl font-heading text-primary/10">
-                師
-              </div>
             </div>
 
             <div className="space-y-6">
@@ -33,7 +30,7 @@ export const InstructorsSection = () => {
                   Shihan Mike Selvey
                 </h3>
                 <p className="text-primary tracking-wider text-sm">
-                  7th Dan Kyoshi • Chief Instructor
+                  8th Dan Kyoshi • Chief Instructor
                 </p>
               </div>
 

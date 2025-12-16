@@ -3,7 +3,7 @@ import { MapPin, Clock, User } from 'lucide-react';
 const schools = [
   {
     name: 'Tsunami Yodokan',
-    instructor: 'Shihan Mike Selvey 7th Dan Kyoshi',
+    instructor: 'Shihan Mike Selvey 8th Dan Kyoshi',
     address: '12, Beynon Road, Carshalton, Surrey SM5 3RL',
     schedule: 'Tuesdays 20:30 - 22:00',
   },
@@ -21,19 +21,19 @@ const schools = [
   },
   {
     name: 'Tonbo Yodokan',
-    instructor: 'Shidoin Denis Nikandrovs',
+    instructor: 'Shidoin Deniss Nikandrovs 4th Dan Renshi',
     address: '12, Beynon Road, Carshalton, Surrey SM5 3RL',
     schedule: 'Tuesdays 19:00 - 20:30',
   },
   {
     name: 'Fudoshin Yodokan',
-    instructor: 'Sensei Demetri',
+    instructor: 'Sensei Demetri 3rd Dan',
     address: 'Charles Major Centre, Duppas Hill Terrace, CR0 4BA',
     schedule: 'Thursdays 19:30 - 21:30',
   },
   {
     name: 'Yabane Yodokan',
-    instructor: 'Sensei Crusoe',
+    instructor: 'Sensei Crusoe 3rd Dan',
     address: 'Emmanuel United Reform Church, West Wickham, BR4 9JS',
     schedule: 'Wednesdays 20:00 - 22:00',
   },

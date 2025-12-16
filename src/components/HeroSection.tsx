@@ -1,6 +1,14 @@
+import { Volume2 } from 'lucide-react';
 import heroBg from '@/assets/Tori_Gate_Royalty_Free_Cropped.jpeg';
 
 export const HeroSection = () => {
+  const playPronunciation = () => {
+    const utterance = new SpeechSynthesisUtterance('天心流');
+    utterance.lang = 'ja-JP';
+    utterance.rate = 0.8;
+    speechSynthesis.speak(utterance);
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -18,16 +26,27 @@ export const HeroSection = () => {
           THE ART OF THE SAMURAI SWORD
         </p>
         
-        <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-light tracking-wide mb-6 animate-slide-up">
-          <span className="block text-foreground">Tenshin Ryu</span>
+        <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-light tracking-wide mb-6 animate-slide-up relative">
+          <span className="block text-foreground relative inline-block">
+            Tenshin Ryu
+            <button
+              onClick={playPronunciation}
+              className="absolute -top-1 -right-8 md:-right-10 p-1 text-primary/70 hover:text-primary transition-colors"
+              aria-label="Listen to pronunciation"
+            >
+              <Volume2 className="w-4 h-4 md:w-5 md:h-5" />
+            </button>
+          </span>
           <span className="block text-primary mt-2">天心流</span>
         </h1>
         
         <div className="section-divider mb-8" />
         
-        <p className="text-muted-foreground text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mb-10 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+        <p className="text-foreground/90 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mb-10 animate-fade-in drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ animationDelay: '0.3s' }}>
           The way of harmonising oneself in action through the ancient arts of Iaido, Iaijutsu, and Kobudo<br/>
-          Train with us in Carshalton, South London, in the art of the Japanese sword. Complete beginners and experienced martial artists welcome - free trial available<br/>
+          Train with us in Carshalton, South London, in the art of the Japanese sword.<br/>
+          Complete beginners and experienced martial artists welcome<br/>
+          - free trial available<br/>
           If you don't try, you will never know
         </p>
         

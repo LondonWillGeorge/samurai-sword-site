@@ -1,25 +1,29 @@
-import ogawaKinnosuke from '@/assets/ogawa-kinnosuke.png';
-import abbeKenshiro from '@/assets/abbe-kenshiro.jpg';
+import { Link } from 'react-router-dom';
+import ogawaKinnosuke from '@/assets/ogawa kinnosuke.jpg';
+import abbeKenshiro from '@/assets/sensei Abbe kenshiro.jpg';
 import otaniTomio from '@/assets/otani-tomio.jpg';
 
 const lineageMembers = [
   {
-    name: 'Ogawa Kinnosuke',
-    title: '10th Dan Swordmaster',
-    image: ogawaKinnosuke,
-    description: 'One of only three masters granted the "Shijohosho" by the Emperor of Japan. In 1933 at the Butokukwai in Kyoto, he began to teach the art of swordsmanship to Abbe Kenshiro.',
+    name: 'Otani Tomio',
+    title: 'Master Budoka',
+    image: otaniTomio,
+    slug: 'otani-tomio',
+    description: 'First born son of Masutaro Otani, 7th Dan Judo Master. Trained since childhood and became a Master Budoka under Abbe Sensei\'s guidance. In 1984, opened the Yodokan in South London.',
   },
   {
     name: 'Abbe Kenshiro',
     title: '8th Dan - Founder of Kyushin Budo',
     image: abbeKenshiro,
+    slug: 'abbe-kenshiro',
     description: 'Instructed in Kendo since age three, became Japan\'s youngest ever 5th Dan at 18. In 1955, he brought these arts to the United Kingdom and began teaching Otani Tomio.',
   },
   {
-    name: 'Otani Tomio',
-    title: 'Master Budoka',
-    image: otaniTomio,
-    description: 'First born son of Masutaro Otani, 7th Dan Judo Master. Trained since childhood and became a Master Budoka under Abbe Sensei\'s guidance. In 1984, opened the Yodokan in South London.',
+    name: 'Ogawa Kinnosuke',
+    title: '10th Dan Swordmaster',
+    image: ogawaKinnosuke,
+    slug: 'ogawa-kinnosuke',
+    description: 'One of only three masters granted the "Shijohosho" by the Emperor of Japan. In 1933 at the Butokukwai in Kyoto, he began to teach the art of swordsmanship to Abbe Kenshiro.',
   },
 ];
 
@@ -51,13 +55,13 @@ export const LineageSection = () => {
             >
               {/* Image */}
               <div className="w-full md:w-1/2 flex justify-center">
-                <div className="japanese-border p-2 bg-card max-w-xs">
+                <Link to={`/lineage/${member.slug}`} className="japanese-border p-2 bg-card max-w-xs cursor-pointer hover:border-primary transition-colors duration-300">
                   <img
                     src={member.image}
                     alt={member.name}
                     className="w-full h-64 object-cover grayscale hover:grayscale-0 transition-all duration-500"
                   />
-                </div>
+                </Link>
               </div>
 
               {/* Center Dot */}
@@ -65,7 +69,9 @@ export const LineageSection = () => {
 
               {/* Content */}
               <div className={`w-full md:w-1/2 text-center ${index % 2 === 1 ? 'md:text-right' : 'md:text-left'}`}>
-                <h3 className="font-heading text-2xl text-foreground mb-1">{member.name}</h3>
+                <Link to={`/lineage/${member.slug}`} className="hover:text-primary transition-colors">
+                  <h3 className="font-heading text-2xl text-foreground mb-1">{member.name}</h3>
+                </Link>
                 <p className="text-primary text-sm tracking-wider mb-4">{member.title}</p>
                 <p className="text-muted-foreground leading-relaxed">{member.description}</p>
               </div>
