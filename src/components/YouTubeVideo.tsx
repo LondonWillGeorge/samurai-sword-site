@@ -47,6 +47,7 @@ export const YouTubeVideo = ({
   className = ''
 }: YouTubeVideoProps) => {
   const [player, setPlayer] = useState<YTPlayer | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [speed, setSpeed] = useState(1);
   const [availableSpeeds, setAvailableSpeeds] = useState<number[]>([0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]);
   const playerRef = useRef<string>(`player-${videoId}-${Math.random().toString(36).substr(2, 9)}`);
@@ -72,6 +73,7 @@ export const YouTubeVideo = ({
           events: {
             onReady: (event) => {
               setPlayer(event.target);
+              setIsLoading(false);
               const rates = event.target.getAvailablePlaybackRates();
               if (rates && rates.length > 0) {
                 setAvailableSpeeds(rates);
@@ -120,6 +122,11 @@ export const YouTubeVideo = ({
   return (
     <div className={`flex flex-col ${className}`}>
       <div className={`group relative overflow-hidden bg-card ${getAspectRatioClass()}`}>
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-card z-10">
+            <div className="animate-pulse text-muted-foreground text-sm">Loading video...</div>
+          </div>
+        )}
         {cropToFill ? (
           <div className="absolute inset-0 overflow-hidden">
             <div 
