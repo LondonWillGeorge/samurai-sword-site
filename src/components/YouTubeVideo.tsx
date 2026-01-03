@@ -10,6 +10,8 @@ declare global {
         elementId: string,
         options: {
           videoId: string;
+          width?: string | number;
+          height?: string | number;
           playerVars?: Record<string, number | string>;
           events?: {
             onReady?: (event: { target: YTPlayer }) => void;
@@ -75,6 +77,8 @@ export const YouTubeVideo = ({
       if (window.YT && window.YT.Player) {
         const newPlayer = new window.YT.Player(playerRef.current, {
           videoId: videoId,
+          width: '100%',
+          height: '100%',
           playerVars: {
             playsinline: 1,
             modestbranding: 1,
@@ -129,7 +133,7 @@ export const YouTubeVideo = ({
     switch (aspectRatio) {
       case 'portrait': return 'aspect-[9/16]';
       case 'short-portrait': return 'aspect-[9/12]';
-      case 'compact': return 'aspect-[3/4]';
+      case 'compact': return 'aspect-[9/8]';
       case 'landscape': return 'aspect-video';
       case 'square': return 'aspect-square';
       default: return 'aspect-[9/16]';
@@ -202,7 +206,7 @@ export const YouTubeVideo = ({
           <div className="absolute inset-0 overflow-hidden">
             <div 
               id={playerRef.current} 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[150%]"
+              className="absolute bottom-0 left-0 right-0 w-full h-[160%]"
             />
           </div>
         ) : (
@@ -246,7 +250,7 @@ export const VideoPlaceholder = ({ aspectRatio = 'portrait' }: { aspectRatio?: '
     switch (aspectRatio) {
       case 'portrait': return 'aspect-[9/16]';
       case 'short-portrait': return 'aspect-[9/12]';
-      case 'compact': return 'aspect-[3/4]';
+      case 'compact': return 'aspect-[9/8]';
       case 'landscape': return 'aspect-video';
       case 'square': return 'aspect-square';
       default: return 'aspect-[9/16]';
