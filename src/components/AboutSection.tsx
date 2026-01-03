@@ -12,7 +12,19 @@ export const AboutSection = () => {
           </h2>
           <div className="section-divider" />
           
-          {/* Mobile: Video below the red line */}
+ {/* Mobile: Image below title */}
+          <div className="lg:hidden mb-8">
+            <div className="japanese-border p-4 bg-card max-w-sm mx-auto">
+              <img
+                src={iaidoIllustration}
+                alt="Iaido illustration"
+                className="w-full h-auto"
+              />
+            </div>
+          </div>
+
+
+          {/* Mobile: Video below image */}
           <div className="lg:hidden mt-8 mb-6">
             <div className="japanese-border p-2 bg-card max-w-xs mx-auto">
               <YouTubeVideo 
@@ -25,16 +37,6 @@ export const AboutSection = () => {
             </div>
           </div>
 
-          {/* Mobile: Image below video */}
-          <div className="lg:hidden mb-8">
-            <div className="japanese-border p-4 bg-card max-w-sm mx-auto">
-              <img
-                src={iaidoIllustration}
-                alt="Iaido illustration"
-                className="w-full h-auto"
-              />
-            </div>
-          </div>
         </div>
 
         {/* Desktop layout */}
