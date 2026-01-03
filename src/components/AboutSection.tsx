@@ -47,9 +47,6 @@ export const AboutSection = () => {
                 className="w-full h-auto"
               />
             </div>
-            <div className="text-center mt-4 text-6xl font-heading text-primary/20">
-              道
-            </div>
           </div>
 
           {/* Desktop: Text on left, video on right */}
@@ -61,9 +58,10 @@ export const AboutSection = () => {
               
               <p>
                 An in-depth reading of the Japanese characters:<br/>
-                <span className="text-primary">I</span> = being, <br/>
-                <span className="text-primary">AI</span> = harmony<br/>
-                <span className="text-primary">DO</span> = way. "The way of harmonising oneself in action".
+                <span className="text-primary">居 I</span> = being, <br/>
+                <span className="text-primary">合 AI</span> = harmony<br/>
+                <span className="text-primary">道 DO</span> = way.<br/>
+                "The way of harmonising oneself in action".
               </p>
 
               <p>
