@@ -17,9 +17,10 @@ export const AboutSection = () => {
             <div className="japanese-border p-2 bg-card max-w-xs mx-auto">
               <YouTubeVideo 
                 videoId="swmaSSU3r9s" 
-                aspectRatio="portrait"
+                aspectRatio="short-portrait"
                 cropToFill={true}
                 showSpeedSlider={true}
+                lazyLoad={true}
               />
             </div>
           </div>
@@ -89,9 +90,10 @@ export const AboutSection = () => {
               <div className="japanese-border p-2 bg-card">
                 <YouTubeVideo 
                   videoId="swmaSSU3r9s" 
-                  aspectRatio="portrait"
+                  aspectRatio="short-portrait"
                   cropToFill={true}
                   showSpeedSlider={true}
+                  lazyLoad={true}
                 />
               </div>
             </div>

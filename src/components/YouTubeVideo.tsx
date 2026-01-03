@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Slider } from '@/components/ui/slider';
+import { Play } from 'lucide-react';
 
 // YouTube IFrame API types
 declare global {
@@ -32,10 +33,11 @@ interface YTPlayer {
 interface YouTubeVideoProps {
   videoId: string;
   caption?: string;
-  aspectRatio?: 'portrait' | 'landscape' | 'square';
+  aspectRatio?: 'portrait' | 'landscape' | 'square' | 'short-portrait';
   cropToFill?: boolean;
   showSpeedSlider?: boolean;
   className?: string;
+  lazyLoad?: boolean;
 }
 
 export const YouTubeVideo = ({ 
@@ -44,15 +46,23 @@ export const YouTubeVideo = ({
   aspectRatio = 'portrait',
   cropToFill = false,
   showSpeedSlider = true,
-  className = ''
+  className = '',
+  lazyLoad = false
 }: YouTubeVideoProps) => {
   const [player, setPlayer] = useState<YTPlayer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isActivated, setIsActivated] = useState(!lazyLoad);
   const [speed, setSpeed] = useState(1);
   const [availableSpeeds, setAvailableSpeeds] = useState<number[]>([0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]);
   const playerRef = useRef<string>(`player-${videoId}-${Math.random().toString(36).substr(2, 9)}`);
 
+  // Get thumbnail URL
+  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  const fallbackThumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
   useEffect(() => {
+    if (!isActivated) return;
+
     // Load YouTube IFrame API if not already loaded
     if (!window.YT) {
       const tag = document.createElement('script');
@@ -69,6 +79,7 @@ export const YouTubeVideo = ({
             playsinline: 1,
             modestbranding: 1,
             rel: 0,
+            autoplay: lazyLoad ? 1 : 0,
           },
           events: {
             onReady: (event) => {
@@ -89,7 +100,7 @@ export const YouTubeVideo = ({
     } else {
       window.onYouTubeIframeAPIReady = initPlayer;
     }
-  }, [videoId]);
+  }, [videoId, isActivated, lazyLoad]);
 
   const handleSpeedChange = (value: number[]) => {
     const newSpeed = value[0];
@@ -107,17 +118,76 @@ export const YouTubeVideo = ({
     }
   };
 
+  const handleActivate = () => {
+    setIsActivated(true);
+  };
+
   const minSpeed = availableSpeeds[0] || 0.25;
   const maxSpeed = availableSpeeds[availableSpeeds.length - 1] || 2;
 
   const getAspectRatioClass = () => {
     switch (aspectRatio) {
       case 'portrait': return 'aspect-[9/16]';
+      case 'short-portrait': return 'aspect-[9/12]';
       case 'landscape': return 'aspect-video';
       case 'square': return 'aspect-square';
       default: return 'aspect-[9/16]';
     }
   };
+
+  // Thumbnail preview for lazy loading
+  if (!isActivated) {
+    return (
+      <div className={`flex flex-col ${className}`}>
+        <div 
+          className={`group relative overflow-hidden bg-card ${getAspectRatioClass()} cursor-pointer`}
+          onClick={handleActivate}
+        >
+          <img 
+            src={thumbnailUrl}
+            alt="Video thumbnail"
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = fallbackThumbnail;
+            }}
+          />
+          <div className="absolute inset-0 bg-background/30 flex items-center justify-center group-hover:bg-background/20 transition-colors">
+            <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center group-hover:bg-primary transition-colors group-hover:scale-110 transform duration-200">
+              <Play className="w-8 h-8 text-primary-foreground ml-1" fill="currentColor" />
+            </div>
+          </div>
+          {caption && (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none">
+                <p className="text-foreground text-sm tracking-wider">{caption}</p>
+              </div>
+            </>
+          )}
+        </div>
+        
+        {showSpeedSlider && (
+          <div className="mt-4 px-2 opacity-50">
+            <div className="flex items-center gap-3">
+              <span className="text-muted-foreground text-xs">{minSpeed}x</span>
+              <Slider
+                value={[speed]}
+                min={minSpeed}
+                max={maxSpeed}
+                step={0.25}
+                className="flex-1"
+                disabled
+              />
+              <span className="text-muted-foreground text-xs">{maxSpeed}x</span>
+            </div>
+            <p className="text-center text-xs text-muted-foreground mt-2">
+              Speed: {speed}x
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={`flex flex-col ${className}`}>
@@ -128,11 +198,10 @@ export const YouTubeVideo = ({
           </div>
         )}
         {cropToFill ? (
-          <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-x-0 inset-y-[-10%] overflow-hidden">
             <div 
               id={playerRef.current} 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-full"
-              style={{ minWidth: '177.78%' }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[120%]"
             />
           </div>
         ) : (
@@ -171,10 +240,11 @@ export const YouTubeVideo = ({
   );
 };
 
-export const VideoPlaceholder = ({ aspectRatio = 'portrait' }: { aspectRatio?: 'portrait' | 'landscape' | 'square' }) => {
+export const VideoPlaceholder = ({ aspectRatio = 'portrait' }: { aspectRatio?: 'portrait' | 'landscape' | 'square' | 'short-portrait' }) => {
   const getAspectRatioClass = () => {
     switch (aspectRatio) {
       case 'portrait': return 'aspect-[9/16]';
+      case 'short-portrait': return 'aspect-[9/12]';
       case 'landscape': return 'aspect-video';
       case 'square': return 'aspect-square';
       default: return 'aspect-[9/16]';
