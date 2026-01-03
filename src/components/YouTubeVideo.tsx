@@ -33,7 +33,7 @@ interface YTPlayer {
 interface YouTubeVideoProps {
   videoId: string;
   caption?: string;
-  aspectRatio?: 'portrait' | 'landscape' | 'square' | 'short-portrait';
+  aspectRatio?: 'portrait' | 'landscape' | 'square' | 'short-portrait' | 'compact';
   cropToFill?: boolean;
   showSpeedSlider?: boolean;
   className?: string;
@@ -129,6 +129,7 @@ export const YouTubeVideo = ({
     switch (aspectRatio) {
       case 'portrait': return 'aspect-[9/16]';
       case 'short-portrait': return 'aspect-[9/12]';
+      case 'compact': return 'aspect-[3/4]';
       case 'landscape': return 'aspect-video';
       case 'square': return 'aspect-square';
       default: return 'aspect-[9/16]';
@@ -198,10 +199,10 @@ export const YouTubeVideo = ({
           </div>
         )}
         {cropToFill ? (
-          <div className="absolute inset-x-0 inset-y-[-10%] overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
             <div 
               id={playerRef.current} 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[120%]"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[150%]"
             />
           </div>
         ) : (
@@ -240,11 +241,12 @@ export const YouTubeVideo = ({
   );
 };
 
-export const VideoPlaceholder = ({ aspectRatio = 'portrait' }: { aspectRatio?: 'portrait' | 'landscape' | 'square' | 'short-portrait' }) => {
+export const VideoPlaceholder = ({ aspectRatio = 'portrait' }: { aspectRatio?: 'portrait' | 'landscape' | 'square' | 'short-portrait' | 'compact' }) => {
   const getAspectRatioClass = () => {
     switch (aspectRatio) {
       case 'portrait': return 'aspect-[9/16]';
       case 'short-portrait': return 'aspect-[9/12]';
+      case 'compact': return 'aspect-[3/4]';
       case 'landscape': return 'aspect-video';
       case 'square': return 'aspect-square';
       default: return 'aspect-[9/16]';

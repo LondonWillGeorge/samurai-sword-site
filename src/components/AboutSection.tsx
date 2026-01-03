@@ -90,7 +90,7 @@ export const AboutSection = () => {
               <div className="japanese-border p-2 bg-card">
                 <YouTubeVideo 
                   videoId="swmaSSU3r9s" 
-                  aspectRatio="short-portrait"
+                  aspectRatio="compact"
                   cropToFill={true}
                   showSpeedSlider={true}
                   lazyLoad={true}
