@@ -108,12 +108,13 @@ export const AboutSection = () => {
             <span className="text-accent font-heading text-2xl">I</span>aido is the art of reacting to a surprise attack by counter attacking with a sword. The term does not translate into "The art of drawing the sword", but rather <span className="text-foreground font-medium">"Instant Awareness"</span>.
           </p>
           
-          <p>
-            An in-depth reading of the Japanese characters:<br/>
-            <span className="text-primary">I</span> = being, <br/>
-            <span className="text-primary">AI</span> = harmony<br/>
-            <span className="text-primary">DO</span> = way. "The way of harmonising oneself in action".
-          </p>
+              <p>
+                An in-depth reading of the Japanese characters:<br/>
+                <span className="text-primary">居 I</span> = being, <br/>
+                <span className="text-primary">合 AI</span> = harmony<br/>
+                <span className="text-primary">道 DO</span> = way.<br/>
+                "The way of harmonising oneself in action".
+              </p>
 
           <p>
             The Iaidoka wields a sword not to control the opponent, but to control themselves. Iaido is mostly performed solo as a series of Waza against single or multiple imaginary opponents. Each form begins and ends with the sword sheathed.
