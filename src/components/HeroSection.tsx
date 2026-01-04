@@ -3,7 +3,7 @@ import heroBg from '@/assets/Tori_Gate_Royalty_Free_Cropped.jpeg';
 
 export const HeroSection = () => {
   const playPronunciation = () => {
-    const utterance = new SpeechSynthesisUtterance('天心流');
+    const utterance = new SpeechSynthesisUtterance('天心武士');
     utterance.lang = 'ja-JP';
     utterance.rate = 0.8;
     speechSynthesis.speak(utterance);
@@ -28,7 +28,7 @@ export const HeroSection = () => {
         
         <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-light tracking-wide mb-6 animate-slide-up relative">
           <span className="block text-foreground relative inline-block">
-            Tenshin Ryu
+            Tenshin Warrior
             <button
               onClick={playPronunciation}
               className="absolute -top-1 -right-8 md:-right-10 p-1 text-primary/70 hover:text-primary transition-colors"
@@ -37,17 +37,17 @@ export const HeroSection = () => {
               <Volume2 className="w-4 h-4 md:w-5 md:h-5" />
             </button>
           </span>
-          <span className="block text-primary mt-2">天心流</span>
+          <span className="block text-primary mt-2">天心武士</span>
         </h1>
         
         <div className="section-divider mb-8" />
         
         <p className="text-foreground/90 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mb-10 animate-fade-in drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ animationDelay: '0.3s' }}>
-          The way of harmonising oneself in action through the ancient arts of Iaido, Iaijutsu, and Kobudo<br/>
-          Train with us in Carshalton, South London, in the art of the Japanese sword.<br/>
-          Complete beginners and experienced martial artists welcome<br/>
-          - free trial available<br/>
-          If you don't try, you will never know
+          A 550 year old style of Japanese swordsmanship, harmonising oneself through action.<br/>
+          Train with us in South London, in Tenshin Ryu <span className="text-primary font-bold">天心流</span>.<br/>
+          Complete beginners and experienced Martial Artists welcome!<br/>
+          Free trial lesson.<br/>
+          If you don't try, you will never know.
         </p>
         
         <a
