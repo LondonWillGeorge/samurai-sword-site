@@ -52,14 +52,17 @@ export const Navigation = () => {
         >
           <Link
             to={item.href}
-            className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-1"
+            className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-1 py-2"
           >
             {item.label}
             <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
           </Link>
           
+          {/* Invisible bridge to prevent gap between trigger and dropdown */}
+          <div className="absolute top-full left-0 h-2 w-full" />
+          
           {openSubmenu === item.label && (
-            <div className="absolute top-full left-0 mt-2 bg-background border border-border rounded-sm shadow-lg min-w-48 py-2 z-50">
+            <div className="absolute top-[calc(100%+0.5rem)] left-0 bg-background border border-border rounded-sm shadow-lg min-w-48 py-2 z-50">
               {item.subItems!.map((subItem) => (
                 <Link
                   key={subItem.href}
@@ -104,26 +107,47 @@ export const Navigation = () => {
     const hasSubItems = item.subItems && item.subItems.length > 0;
     
     if (hasSubItems) {
+      const isSubmenuOpen = openSubmenu === item.label;
       return (
-        <div key={item.href}>
-          <Link
-            to={item.href}
-            onClick={() => handleNavClick(item.href)}
-            className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors"
+        <div 
+          key={item.href}
+          onMouseEnter={() => setOpenSubmenu(item.label)}
+        >
+          <div className="flex items-center justify-between">
+            <Link
+              to={item.href}
+              onClick={() => handleNavClick(item.href)}
+              className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors flex-1"
+            >
+              {item.label}
+            </Link>
+            <button
+              onClick={() => setOpenSubmenu(isSubmenuOpen ? null : item.label)}
+              className="p-2 text-muted-foreground hover:text-primary transition-colors"
+            >
+              <ChevronDown 
+                size={16} 
+                className={`transition-transform duration-200 ${isSubmenuOpen ? 'rotate-180' : ''}`} 
+              />
+            </button>
+          </div>
+          <div 
+            className={`overflow-hidden transition-all duration-200 ${
+              isSubmenuOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
+            }`}
           >
-            {item.label}
-          </Link>
-          <div className="pl-4 border-l border-border ml-2">
-            {item.subItems!.map((subItem) => (
-              <Link
-                key={subItem.href}
-                to={subItem.href}
-                onClick={() => handleNavClick(subItem.href)}
-                className="block py-2 text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors"
-              >
-                {subItem.label}
-              </Link>
-            ))}
+            <div className="pl-4 border-l border-border ml-2">
+              {item.subItems!.map((subItem) => (
+                <Link
+                  key={subItem.href}
+                  to={subItem.href}
+                  onClick={() => handleNavClick(subItem.href)}
+                  className="block py-2 text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {subItem.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       );
@@ -135,6 +159,7 @@ export const Navigation = () => {
           key={item.href}
           to={item.href}
           onClick={() => handleNavClick(item.href)}
+          onMouseEnter={() => setOpenSubmenu(null)}
           className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors"
         >
           {item.label}
@@ -147,6 +172,7 @@ export const Navigation = () => {
         key={item.href}
         to={item.href}
         onClick={() => setIsOpen(false)}
+        onMouseEnter={() => setOpenSubmenu(null)}
         className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors"
       >
         {item.label}
