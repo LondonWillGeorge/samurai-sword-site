@@ -89,7 +89,7 @@ export const AboutSection = () => {
 
             {/* Desktop: Video on right side */}
             <div className="relative">
-              <div className="japanese-border p-2 bg-card max-w-xs mx-auto">
+              <div className="japanese-border p-2 bg-card max-w-lg mx-auto">
                 <YouTubeVideo 
                   videoId="swmaSSU3r9s" 
                   aspectRatio="compact"
