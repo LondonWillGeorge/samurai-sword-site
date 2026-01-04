@@ -35,7 +35,7 @@ export const AboutSection = () => {
                 lazyLoad={true}
               />
             </div>
-            <span className="text-primary">8th Dan Shihan Selvey and 4th Dan Renshi Nikandrovs demonstrate the Long Sword Kata forms of our Tenshin Ryu style.</span>
+            <span className="text-muted-foreground">8th Dan Shihan Selvey and 4th Dan Renshi Nikandrovs demonstrate the Long Sword Kata forms of our Tenshin Ryu style.</span>
           </div>
 
         </div>
@@ -99,7 +99,7 @@ export const AboutSection = () => {
                   lazyLoad={true}
                 />
               </div>
-              <span className="text-primary">8th Dan Shihan Selvey and 4th Dan Renshi Nikandrovs demonstrate the Long Sword Kata forms of our Tenshin Ryu style.</span>
+              <span className="text-muted-foreground">8th Dan Shihan Selvey and 4th Dan Renshi Nikandrovs demonstrate the Long Sword Kata forms of our Tenshin Ryu style.</span>
             </div>
           </div>
         </div>
