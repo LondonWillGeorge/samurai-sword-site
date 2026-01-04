@@ -43,7 +43,8 @@ export const HeroSection = () => {
         <div className="section-divider mb-8" />
         
         <p className="text-foreground/90 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mb-10 animate-fade-in drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ animationDelay: '0.3s' }}>
-          Train with us in South London, in Tenshin Ryu - 天心流 - the ancient art of the Japanese sword.<br/>
+          A 550 year old style of Japanese swordsmanship, harmonising oneself through action.<br/>
+          Train with us in South London, in Tenshin Ryu <span className="text-primary">天心流</span>.<br/>
           Complete beginners and experienced Martial Artists welcome!<br/>
           Free trial lesson.<br/>
           If you don't try, you will never know.
