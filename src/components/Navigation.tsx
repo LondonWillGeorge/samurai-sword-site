@@ -201,7 +201,7 @@ export const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="font-heading text-xl tracking-wider text-foreground">
-            <span className="text-primary">天</span>心流
+            <span className="text-primary">天心</span>武士
           </Link>
 
           {/* Desktop Navigation */}
