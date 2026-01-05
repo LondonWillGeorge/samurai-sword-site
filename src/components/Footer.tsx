@@ -12,13 +12,6 @@ export const Footer = () => {
             Yodokan UK - Teaching the traditional arts of Iaido, Iaijutsu, and Kobudo in the spirit of the Samurai
           </p>
 
-          <div className="flex gap-8 mb-8">
-            <a href="#about" className="text-muted-foreground hover:text-primary transition-colors text-sm">About</a>
-            <a href="#lineage" className="text-muted-foreground hover:text-primary transition-colors text-sm">Lineage</a>
-            <a href="#schools" className="text-muted-foreground hover:text-primary transition-colors text-sm">Schools</a>
-            <a href="#events" className="text-muted-foreground hover:text-primary transition-colors text-sm">Events</a>
-          </div>
-
           <div className="section-divider mb-6" />
 
           <p className="text-muted-foreground text-xs">
