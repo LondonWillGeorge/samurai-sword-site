@@ -3,18 +3,23 @@ import { Calendar } from 'lucide-react';
 const events = [
   {
     title: 'Kagami Biraki',
-    date: 'January 2025',
+    date: '6th January 2026',
     description: 'Annual New Year celebration with traditional Four Cuts ceremony and full syllabus practice including Katana, Wakazashi, Jo, and Kobudo.',
   },
   {
+    title: 'Misogi in Brighton',
+    date: 'TBD - February/March 2026',
+    description: 'A traditional spiritual ritual on Brighton Beach, to welcome the Japanese new year, anyone who can make it is welcome. This comprises a good period of warm-up exercises followed by walking into the sea, up to waist height, in white gi jackets and trousers. The aim is to stand still and silent in the sea for up to 4 minutes! There is also a paid sauna option next to the beach to warm up afterwards.',
+  },
+  {
     title: 'Combined Training Seminar',
-    date: 'Spring 2025',
-    description: 'Students from all Yodokan schools gather for intensive training in Iaido, Iaijutsu, Aikido, and two-person Katana kata.',
+    date: 'To Be Announced - 2026',
+    description: 'Students who are able to come, from all Yodokan schools, gather for intensive training in Iaido, Iaijutsu, Aikido, and other martial arts.',
   },
   {
     title: 'Grading Examinations',
-    date: 'Throughout the year',
-    description: 'Regular grading opportunities for students to progress through the DNBKID ranking system.',
+    date: 'Twice per year, in summer and winter',
+    description: 'Regular grading opportunities for students to progress through the DNBK International Division ranking system.',
   },
 ];
 
