@@ -48,7 +48,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email to Tenshin Ryu
     const notificationEmail = await resend.emails.send({
       from: "Tenshin Ryu <onboarding@resend.dev>",
-      to: ["info@tenshinryu.co.uk"],
+      to: ["will_croxford@hotmail.com"],
       subject: `Free Trial Request from ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
