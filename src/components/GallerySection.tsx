@@ -16,7 +16,7 @@ export const GallerySection = () => {
         <div className="text-center mb-16">
           <p className="text-primary tracking-[0.3em] text-sm mb-4">GALLERY</p>
           <h2 className="font-heading text-4xl md:text-5xl text-foreground mb-4">
-            Moments in Time
+            Old and New Club Photos
           </h2>
           <div className="section-divider" />
         </div>
@@ -46,7 +46,7 @@ export const GallerySection = () => {
           <div className="text-center mb-12">
             <p className="text-primary tracking-[0.3em] text-sm mb-4">VIDEOS</p>
             <h3 className="font-heading text-3xl md:text-4xl text-foreground mb-4">
-              Tenshin In Motion
+              Tenshin Ryu In Motion
             </h3>
             <div className="section-divider" />
           </div>
