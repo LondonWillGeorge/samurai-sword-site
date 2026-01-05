@@ -17,6 +17,7 @@ const navItems = [
   { label: 'Gallery', href: '/gallery' },
   { label: 'Schools', href: '/schools' },
   { label: 'Events', href: '/events' },
+  { label: 'Free Trial', href: '/free-trial', highlight: true },
 ];
 
 export const Navigation = () => {
@@ -38,7 +39,7 @@ export const Navigation = () => {
     }
   };
 
-  const renderNavLink = (item: { label: string; href: string; subItems?: { label: string; href: string }[] }) => {
+  const renderNavLink = (item: { label: string; href: string; highlight?: boolean; subItems?: { label: string; href: string }[] }) => {
     const isHashLink = item.href.startsWith('/#');
     const hasSubItems = item.subItems && item.subItems.length > 0;
     
@@ -95,14 +96,18 @@ export const Navigation = () => {
       <Link
         key={item.href}
         to={item.href}
-        className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
+        className={`text-sm tracking-widest uppercase transition-colors duration-300 ${
+          item.highlight 
+            ? 'text-primary font-semibold hover:text-primary/80' 
+            : 'text-muted-foreground hover:text-primary'
+        }`}
       >
         {item.label}
       </Link>
     );
   };
 
-  const renderMobileNavLink = (item: { label: string; href: string; subItems?: { label: string; href: string }[] }) => {
+  const renderMobileNavLink = (item: { label: string; href: string; highlight?: boolean; subItems?: { label: string; href: string }[] }) => {
     const isHashLink = item.href.startsWith('/#');
     const hasSubItems = item.subItems && item.subItems.length > 0;
     
@@ -173,7 +178,11 @@ export const Navigation = () => {
         to={item.href}
         onClick={() => setIsOpen(false)}
         onMouseEnter={() => setOpenSubmenu(null)}
-        className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors"
+        className={`block py-3 text-sm tracking-widest uppercase transition-colors ${
+          item.highlight 
+            ? 'text-primary font-semibold hover:text-primary/80' 
+            : 'text-muted-foreground hover:text-primary'
+        }`}
       >
         {item.label}
       </Link>
