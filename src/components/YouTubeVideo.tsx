@@ -65,14 +65,6 @@ export const YouTubeVideo = ({
   useEffect(() => {
     if (!isActivated) return;
 
-    // Load YouTube IFrame API if not already loaded
-    if (!window.YT) {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-    }
-
     const initPlayer = () => {
       if (window.YT && window.YT.Player) {
         const newPlayer = new window.YT.Player(playerRef.current, {
@@ -99,11 +91,30 @@ export const YouTubeVideo = ({
       }
     };
 
+    // Check if API is already loaded
     if (window.YT && window.YT.Player) {
       initPlayer();
-    } else {
-      window.onYouTubeIframeAPIReady = initPlayer;
+      return;
     }
+
+    // Load YouTube IFrame API if not already loading
+    const existingScript = document.querySelector('script[src="https://www.youtube.com/iframe_api"]');
+    if (!existingScript) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+
+    // Use a queue system instead of overwriting the callback
+    const checkAPIReady = setInterval(() => {
+      if (window.YT && window.YT.Player) {
+        clearInterval(checkAPIReady);
+        initPlayer();
+      }
+    }, 100);
+
+    return () => clearInterval(checkAPIReady);
   }, [videoId, isActivated, lazyLoad]);
 
   const handleSpeedChange = (value: number[]) => {
