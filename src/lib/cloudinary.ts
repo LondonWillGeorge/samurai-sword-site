@@ -79,4 +79,10 @@ export const cloudinaryImages: GalleryImage[] = [
     caption: '1983 Yodokan Club Poster - Hand Drawn',
     isCloudinary: true,
   },
+  {
+    publicId: 'Shihan_Glint_Sword_f6xe1t',
+    alt: '2009 Demonstration Ankara, Turkey',
+    caption: '2009 Demonstration Ankara, Turkey',
+    isCloudinary: true,
+  },
 ];
