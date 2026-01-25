@@ -86,6 +86,7 @@ const FreeTrial = () => {
             </h1>
             <div className="section-divider mx-auto mb-6" />
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+              <span className="text-primary">Form still Testing! Please email questions directly to tenshinryu@hotmail.co.uk</span><br/>
               We offer a Free Trial lesson if you are curious about Tenshin Ryu, or just ask any related questions here.
               Complete beginners and experienced martial artists are equally welcome.
             </p>
@@ -224,10 +225,10 @@ const FreeTrial = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
-                href="mailto:info@tenshinryu.co.uk" 
+                href="mailto:tenshinryu@hotmail.co.uk" 
                 className="text-primary hover:text-primary/80 transition-colors"
               >
-                info@tenshinryu.co.uk
+                tenshinryu@hotmail.co.uk
               </a>
               <span className="hidden sm:inline text-muted-foreground">|</span>
               <a 

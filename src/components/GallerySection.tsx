@@ -1,15 +1,7 @@
 import { useState } from 'react';
-import trainingSeminar from '@/assets/training-seminar.jpg';
-import otaniDemoAikido from '@/assets/Otani_Tomio_Demo_Aikido.png';
 import { YouTubeVideo, VideoPlaceholder } from '@/components/YouTubeVideo';
 import { ImageLightbox } from '@/components/ImageLightbox';
 import { cloudinaryImages, getThumbnailUrl, getFullSizeUrl } from '@/lib/cloudinary';
-
-// Local images (non-Cloudinary)
-const localImages = [
-  { src: trainingSeminar, alt: 'Kagami Biraki 2022 Japanese New Year', caption: 'Kagami Biraki 2022 Japanese New Year' },
-  { src: otaniDemoAikido, alt: 'Otani Tomio Demonstrating Aikido c.1982', caption: 'Otani Tomio Demonstrating Aikido c.1982' },
-];
 
 export const GallerySection = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -43,24 +35,6 @@ export const GallerySection = () => {
 
         {/* Images Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          {/* Local images */}
-          {localImages.map((image, index) => (
-            <div
-              key={`local-${index}`}
-              className="group relative overflow-hidden bg-card aspect-[3/4] cursor-pointer"
-              onClick={() => openLightbox(image.src, image.src, image.alt, image.caption)}
-            >
-              <img
-                src={image.src}
-                alt={image.alt}
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                <p className="text-foreground text-sm tracking-wider">{image.caption}</p>
-              </div>
-            </div>
-          ))}
 
           {/* Cloudinary images */}
           {cloudinaryImages.map((image, index) => {

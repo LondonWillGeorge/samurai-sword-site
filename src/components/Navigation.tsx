@@ -197,7 +197,7 @@ export const Navigation = () => {
           <div className="flex justify-end items-center h-8 gap-6 text-xs text-muted-foreground">
             <a href="mailto:tenshinryu@hotmail.co.uk" className="flex items-center gap-1.5 hover:text-primary transition-colors">
               <Mail size={12} />
-              info@tenshinryu.co.uk
+              tenshinryu@hotmail.co.uk
             </a>
             <a href="tel:07715255150" className="flex items-center gap-1.5 hover:text-primary transition-colors">
               <Phone size={12} />

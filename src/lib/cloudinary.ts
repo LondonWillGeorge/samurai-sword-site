@@ -73,6 +73,13 @@ export interface GalleryImage {
 }
 
 export const cloudinaryImages: GalleryImage[] = [
+  
+  {
+    publicId: 'Otani_Tomio_Demo_Aikido_ervqne',
+    alt: 'c1982 Otani Tomio Demonstrating Aikido',
+    caption: 'c1982 Otani Tomio Demonstrating Aikido',
+    isCloudinary: true,
+  },
   {
     publicId: '1983_Hand_Drawn_Yodokan_Poster_cc8h82',
     alt: '1983 Yodokan Club Poster - Hand Drawn',
@@ -83,6 +90,18 @@ export const cloudinaryImages: GalleryImage[] = [
     publicId: 'Shihan_Glint_Sword_f6xe1t',
     alt: '2009 Demonstration Ankara, Turkey',
     caption: '2009 Demonstration Ankara, Turkey',
+    isCloudinary: true,
+  },
+  {
+    publicId: 'IMG-20250706-WA0015_hxh3vw',
+    alt: 'c2016 Iaido Demonstration in Croydon',
+    caption: 'c2016 Iaido Demonstration in Croydon',
+    isCloudinary: true,
+  },
+  {
+    publicId: 'Demetri_Shihan_Jo_Defense_pf85cq',
+    alt: 'c2016 Jo (Staff) Defense Against Bokken (Wooden Iaido Sword) in Croydon',
+    caption: 'c2016 Jo (Staff) Defense Against Bokken (Wooden Iaido Sword) in Croydon',
     isCloudinary: true,
   },
 ];
