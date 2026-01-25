@@ -82,11 +82,11 @@ const FreeTrial = () => {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="font-heading text-4xl md:text-5xl text-foreground mb-4">
-              <span className="text-primary">Free</span> Trial Lesson
+              Contact Us / <span className="text-primary">Free</span> Trial Lesson
             </h1>
             <div className="section-divider mx-auto mb-6" />
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              Experience the art of Tenshin Ryu with a complimentary trial lesson. 
+              We offer a Free Trial lesson if you are curious about Tenshin Ryu, or just ask any related questions here.
               Complete beginners and experienced martial artists are equally welcome.
             </p>
           </div>

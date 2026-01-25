@@ -17,7 +17,7 @@ const navItems = [
   { label: 'Gallery', href: '/gallery' },
   { label: 'Schools', href: '/schools' },
   { label: 'Events', href: '/events' },
-  { label: 'Free Trial', href: '/free-trial', highlight: true },
+  { label: 'Contact / Free Trial', href: '/free-trial', highlight: true },
 ];
 
 export const Navigation = () => {
