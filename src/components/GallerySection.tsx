@@ -56,8 +56,15 @@ export const GallerySection = () => {
               videoId="4LcpgyGT9_Y" 
               caption="Jo (4-foot staff) Kata" 
             />
-            <VideoPlaceholder />
-            <VideoPlaceholder />
+            <YouTubeVideo 
+              videoId="6LfYWCkKG0U" 
+              caption="Sword Kata Moves followed by Tameshigiri Cutting"
+            />
+            <YouTubeVideo 
+              videoId="FFOFYasid8M"
+              caption="Tonfa Strikes Kata"
+            />
+            {/* <VideoPlaceholder /> */}
           </div>
         </div>
 
