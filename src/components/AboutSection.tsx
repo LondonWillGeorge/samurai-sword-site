@@ -73,7 +73,7 @@ export const AboutSection = () => {
               </p>
 
               <p>
-                Iaido is an authentic martial art that proved its martial values in a time of constant battle and warfare, preserved and passed on directly from teacher to student over generations in an unbroken lineage for 450 years.
+                Iaido is an authentic martial art that proved its martial values in a time of constant battle and warfare, preserved and passed on directly from teacher to student over generations in an unbroken lineage for 550 years.
               </p>
 
               <div className="pt-4">
@@ -123,7 +123,7 @@ export const AboutSection = () => {
           </p>
 
           <p>
-            Iaido is an authentic martial art that proved its martial values in a time of constant battle and warfare, preserved and passed on directly from teacher to student over generations in an unbroken lineage for 450 years.
+            Iaido is an authentic martial art that proved its martial values in a time of constant battle and warfare, preserved and passed on directly from teacher to student over generations in an unbroken lineage for 550 years.
           </p>
 
           <div className="pt-4">
