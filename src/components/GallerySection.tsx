@@ -138,7 +138,10 @@ export const GallerySection = () => {
               videoId="qtt4ICD0Szw" 
               caption="Jutsu Tonfa Kata - Shihan Selvey" 
             />
-            <VideoPlaceholder />
+            <YouTubeVideo 
+              videoId="TQL8X6yp_2Y"
+              caption="Double Cut Tameshigiri (higher dan grade cuts)"
+            />
             <VideoPlaceholder />
           </div>
 
