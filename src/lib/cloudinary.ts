@@ -104,4 +104,16 @@ export const cloudinaryImages: GalleryImage[] = [
     caption: 'c2016 Jo (Staff) Defense Against Bokken (Wooden Iaido Sword) in Croydon',
     isCloudinary: true,
   },
+  {
+    publicId: 'International_Competition1_Tsunami_Yodokan_qjyom9',
+    alt: 'Kyoto, Japan - International Martial Arts Meeting',
+    caption: 'Kyoto, Japan - International Martial Arts Meeting',
+    isCloudinary: true,
+  },
+  {
+    publicId: 'International_Competition2_Tsunami_Yodokan_haquc9',
+    alt: 'International Martial Arts Meeting 2',
+    caption: 'International Martial Arts Meeting 2',
+    isCloudinary: true,
+  },
 ];
