@@ -30,7 +30,7 @@ export const GallerySection = () => {
           <h2 className="font-heading text-4xl md:text-5xl text-foreground mb-4">
             Old and New Club Photos
           </h2>
-          <p className="text-muted-foreground tracking-[0.3em] text-sm mb-4">Click photo to enlarge</p>
+          <p className="text-muted-foreground tracking-[0.3em] text-sm mb-4">For colour photo, hover/touch - Click photo to enlarge</p>
           <div className="section-divider" />
         </div>
 
@@ -81,6 +81,9 @@ export const GallerySection = () => {
             <h3 className="font-heading text-3xl md:text-4xl text-foreground mb-4">
               Tenshin Ryu In Motion
             </h3>
+            <p className="text-muted-foreground tracking-[0.3em] text-sm mb-4">Too fast to follow? Use slider below video to slow down or speed up!<br/>
+            After playing once, you can click bottom left video to play again, no need to click 'Watch again on YouTube'.
+            </p>
             <div className="section-divider" />
           </div>
 
@@ -99,6 +102,22 @@ export const GallerySection = () => {
             />
             {/* <VideoPlaceholder /> */}
           </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <YouTubeVideo 
+              videoId="Mj-6IDGRpL8" 
+              caption="Naginata Demonstration" 
+            />
+            <YouTubeVideo 
+              videoId="Sq0PmR5-2_k" 
+              caption="Sai Strikes Kata"
+            />
+            <YouTubeVideo 
+              videoId="woLf7JKs19E"
+              caption="Sai Deflections/Blocks Kata"
+            />
+          </div>
+
         </div>
 
         <div className="text-center mt-12">
