@@ -118,6 +118,31 @@ export const GallerySection = () => {
             />
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <YouTubeVideo 
+              videoId="Jsgz2TaFGeA" 
+              caption="Jo (Staff) against Tonfa Demonstration - Robinson senseis" 
+            />
+            <YouTubeVideo 
+              videoId="28vAKJ18gss" 
+              caption="Tonfa Deflections / Blocks Kata - Sensei Luke"
+            />
+            <YouTubeVideo 
+              videoId="-aZCYn5ZWig"
+              caption="Jo (Staff) Strikes Kata - Sensei Luke"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <YouTubeVideo 
+              videoId="qtt4ICD0Szw" 
+              caption="Jutsu Tonfa Kata - Shihan Selvey" 
+            />
+            <VideoPlaceholder />
+            <VideoPlaceholder />
+          </div>
+
+
         </div>
 
         <div className="text-center mt-12">
