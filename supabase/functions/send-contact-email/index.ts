@@ -5,8 +5,34 @@ const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
+
+const NOTIFY_TO = Deno.env.get("CONTACT_NOTIFY_TO") || "will_croxford@hotmail.com";
+// IMPORTANT: Resend requires a verified domain to send to arbitrary recipients.
+// Configure RESEND_FROM as e.g. "Tenshin Ryu <noreply@tenshinryu.co.uk>" after domain verification.
+const FROM_EMAIL = Deno.env.get("RESEND_FROM") || "Tenshin Ryu <onboarding@resend.dev>";
+
+type ResendErrorShape = {
+  statusCode?: number;
+  name?: string;
+  message?: string;
+};
+
+function assertResendOk(
+  label: string,
+  result: { data?: unknown | null; error?: ResendErrorShape | null },
+) {
+  if (result?.error) {
+    const msg =
+      result.error.message ||
+      `Resend error while sending ${label} (no message provided)`;
+    console.error(`${label} failed:`, result);
+    // Surface a clear, user-actionable error to the frontend.
+    throw new Error(msg);
+  }
+}
 
 interface ContactRequest {
   name: string;
@@ -18,7 +44,7 @@ interface ContactRequest {
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
@@ -47,8 +73,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to Tenshin Ryu
     const notificationEmail = await resend.emails.send({
-      from: "Tenshin Ryu <onboarding@resend.dev>",
-      to: ["will_croxford@hotmail.com"],
+      from: FROM_EMAIL,
+      to: [NOTIFY_TO],
       subject: `Free Trial Request from ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -77,11 +103,12 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
+    assertResendOk("Notification email", notificationEmail as any);
     console.log("Notification email sent:", notificationEmail);
 
     // Send acknowledgement email to the sender
     const acknowledgementEmail = await resend.emails.send({
-      from: "Tenshin Ryu <onboarding@resend.dev>",
+      from: FROM_EMAIL,
       to: [email],
       subject: "Thank you for your interest in Tenshin Ryu",
       html: `
@@ -130,6 +157,7 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
+    assertResendOk("Acknowledgement email", acknowledgementEmail as any);
     console.log("Acknowledgement email sent:", acknowledgementEmail);
 
     return new Response(
@@ -147,7 +175,7 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({ error: error.message || "Failed to send email" }),
       {
-        status: 500,
+        status: 502,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
