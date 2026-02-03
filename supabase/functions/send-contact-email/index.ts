@@ -9,10 +9,10 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const NOTIFY_TO = ["will_croxford@hotmail.com", "tenshinryu@hotmail.co.uk"];
+const NOTIFY_TO = ["will_croxford@hotmail.com"]; // , "tenshinryu@hotmail.co.uk"
 // IMPORTANT: Resend requires a verified domain to send to arbitrary recipients.
-// Configure RESEND_FROM as e.g. "Tenshin Ryu <noreply@tenshinryu.co.uk>" after domain verification.
-const FROM_EMAIL = Deno.env.get("RESEND_FROM") || "Tenshin Ryu <onboarding@resend.dev>";
+// Configure RESEND_FROM as e.g. "Tenshin Warrior <noreply@tenshinwarrior.comk>" after domain verification.
+const FROM_EMAIL = Deno.env.get("RESEND_FROM") || "Tenshin Warrior <onboarding@resend.dev>";
 
 type ResendErrorShape = {
   statusCode?: number;
@@ -97,7 +97,7 @@ const handler = async (req: Request): Promise<Response> => {
           
           <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;" />
           <p style="color: #666; font-size: 12px;">
-            This email was sent from the Tenshin Ryu website contact form.
+            This email was sent from the Tenshin Warrior website contact form.
           </p>
         </div>
       `,
@@ -121,7 +121,7 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="padding: 20px;">
             <p>Dear ${name},</p>
             
-            <p>Thank you for your interest in Tenshin Ryu and for requesting a free trial lesson.</p>
+            <p>Thank you for your interest in TenshinWarrior.com, the Tenshin Ryu Japanese sword arts style, or for requesting a free trial lesson.</p>
             
             <p>We have received your enquiry and one of our instructors will be in touch with you shortly 
             to discuss your trial lesson and answer any questions you may have.</p>
@@ -139,7 +139,7 @@ const handler = async (req: Request): Promise<Response> => {
             
             <p style="margin-top: 30px;">
               With respect,<br />
-              <strong>The Tenshin Ryu Team</strong>
+              <strong>The Tenshin Warrior Team</strong>
             </p>
           </div>
           
