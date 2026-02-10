@@ -86,8 +86,8 @@ const FreeTrial = () => {
             </h1>
             <div className="section-divider mx-auto mb-6" />
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              <span className="text-primary">Form still Testing! Please email questions directly to tenshinryu@hotmail.co.uk</span><br/>
-              We offer a Free Trial lesson if you are curious about Tenshin Ryu, or just ask any related questions here.
+              If you have any question or suggestion for us, or have interest in a Free Trial or to view a lesson, just ask any related questions here.
+              No special equipment is needed for your first lesson, just loose fitting clothing.
               Complete beginners and experienced martial artists are equally welcome.
             </p>
           </div>
@@ -95,13 +95,12 @@ const FreeTrial = () => {
           {/* Success Message */}
           {isSubmitted ? (
             <div className="japanese-border p-8 bg-card text-center">
-              <div className="text-6xl mb-4">道</div>
               <h2 className="font-heading text-2xl text-foreground mb-4">
                 Message Sent Successfully
               </h2>
               <p className="text-muted-foreground mb-6">
-                Thank you for your interest in Tenshin Ryu. We have sent a confirmation to your email 
-                and will get back to you shortly to arrange your free trial lesson.
+                Thank you for your interest in Iaido and our Tenshin Ryu style. We have sent a confirmation to your email 
+                and should get back to you within a few days, to answer your question or arrange a free trial lesson.
               </p>
               <button
                 onClick={() => setIsSubmitted(false)}

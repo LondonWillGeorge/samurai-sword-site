@@ -8,8 +8,8 @@ const events = [
   },
   {
     title: 'Misogi in Brighton',
-    date: 'TBD - February/March 2026',
-    description: 'A traditional spiritual ritual on Brighton Beach, to welcome the Japanese new year, anyone who can make it is welcome. This comprises a good period of warm-up exercises followed by walking into the sea, up to waist height, in white gi jackets and trousers. The aim is to stand still and silent in the sea for up to 4 minutes! There is also a paid sauna option next to the beach to warm up afterwards.',
+    date: '14th February 2026',
+    description: 'A traditional spiritual ritual on Brighton Beach, to welcome the Japanese new year, open to all. This comprises a good period of warm-up exercises followed by walking into the sea, up to waist height, in white gi jackets and trousers. The aim is to stand still and silent in the sea for up to 4 minutes! There is also a paid sauna option next to the beach to warm up afterwards.',
   },
   {
     title: 'Combined Training Seminar',
@@ -58,7 +58,7 @@ export const EventsSection = () => {
 
         <div className="text-center mt-12">
           <p className="text-muted-foreground mb-6">
-            Interested in attending an event or starting your training?
+            Interested to find out more about our events or starting your training?
           </p>
           <a
             href="/schools"
