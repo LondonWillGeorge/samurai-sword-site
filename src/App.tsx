@@ -10,6 +10,7 @@ import AbbeKenshiro from "./pages/masters/AbbeKenshiro";
 import OtaniTomio from "./pages/masters/OtaniTomio";
 import Instructors from "./pages/Instructors";
 import Gallery from "./pages/Gallery";
+import Videos from "./pages/Videos";
 import Schools from "./pages/Schools";
 import Events from "./pages/Events";
 import FreeTrial from "./pages/FreeTrial";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/lineage/otani-tomio" element={<OtaniTomio />} />
           <Route path="/instructors" element={<Instructors />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/videos" element={<Videos />} />
           <Route path="/schools" element={<Schools />} />
           <Route path="/events" element={<Events />} />
           <Route path="/free-trial" element={<FreeTrial />} />
