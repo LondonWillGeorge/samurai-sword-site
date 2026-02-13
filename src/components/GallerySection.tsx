@@ -29,7 +29,7 @@ export const GallerySection = () => {
           <h2 className="font-heading text-4xl md:text-5xl text-foreground mb-4">
             Old and New Club Photos
           </h2>
-          <p className="text-muted-foreground tracking-[0.3em] text-sm mb-4">For colour photo, hover/touch - Click photo to enlarge</p>
+          <p className="text-muted-foreground tracking-wide text-sm mb-4">For colour photo, hover/touch - Click photo to enlarge</p>
           <div className="section-divider" />
         </div>
 

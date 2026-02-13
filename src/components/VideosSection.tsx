@@ -9,7 +9,7 @@ export const VideosSection = () => {
           <h2 className="font-heading text-4xl md:text-5xl text-foreground mb-4">
             Tenshin Ryu In Motion
           </h2>
-          <p className="text-muted-foreground tracking-[0.3em] text-sm mb-4">Too fast to follow? Use slider below video to slow down or speed up!<br/>
+          <p className="text-muted-foreground tracking-wide text-sm mb-4">Too fast to follow? Use slider below video to slow down or speed up!<br/>
           After playing once, you can click bottom left video to play again, no need to click 'Watch again on YouTube'.
           </p>
           <div className="section-divider" />
