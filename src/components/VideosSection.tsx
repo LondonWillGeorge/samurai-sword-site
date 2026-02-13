@@ -22,7 +22,7 @@ export const VideosSection = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <YouTubeVideo videoId="Mj-6IDGRpL8" caption="Naginata Demonstration" />
+          <YouTubeVideo videoId="Mj-6IDGRpL8" caption="Nagamaki Demonstration" />
           <YouTubeVideo videoId="Sq0PmR5-2_k" caption="Sai Strikes Kata" />
           <YouTubeVideo videoId="woLf7JKs19E" caption="Sai Deflections/Blocks Kata" />
         </div>
