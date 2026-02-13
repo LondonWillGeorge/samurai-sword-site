@@ -14,7 +14,15 @@ const navItems = [
     ]
   },
   { label: 'Instructors', href: '/instructors' },
-  { label: 'Gallery', href: '/gallery' },
+  { 
+    label: 'Gallery', 
+    href: '#',
+    noLink: true,
+    subItems: [
+      { label: 'Club Photos', href: '/gallery' },
+      { label: 'Club Videos', href: '/videos' },
+    ]
+  },
   { label: 'Schools', href: '/schools' },
   { label: 'Events', href: '/events' },
   { label: 'Contact / Free Trial', href: '/free-trial', highlight: true },
@@ -39,7 +47,7 @@ export const Navigation = () => {
     }
   };
 
-  const renderNavLink = (item: { label: string; href: string; highlight?: boolean; subItems?: { label: string; href: string }[] }) => {
+  const renderNavLink = (item: { label: string; href: string; highlight?: boolean; noLink?: boolean; subItems?: { label: string; href: string }[] }) => {
     const isHashLink = item.href.startsWith('/#');
     const hasSubItems = item.subItems && item.subItems.length > 0;
     
@@ -51,13 +59,22 @@ export const Navigation = () => {
           onMouseEnter={() => setOpenSubmenu(item.label)}
           onMouseLeave={() => setOpenSubmenu(null)}
         >
-          <Link
-            to={item.href}
-            className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-1 py-2"
-          >
-            {item.label}
-            <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
-          </Link>
+          {item.noLink ? (
+            <span
+              className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-1 py-2 cursor-default"
+            >
+              {item.label}
+              <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
+            </span>
+          ) : (
+            <Link
+              to={item.href}
+              className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-1 py-2"
+            >
+              {item.label}
+              <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
+            </Link>
+          )}
           
           {/* Invisible bridge to prevent gap between trigger and dropdown */}
           <div className="absolute top-full left-0 h-2 w-full" />
@@ -107,7 +124,7 @@ export const Navigation = () => {
     );
   };
 
-  const renderMobileNavLink = (item: { label: string; href: string; highlight?: boolean; subItems?: { label: string; href: string }[] }) => {
+  const renderMobileNavLink = (item: { label: string; href: string; highlight?: boolean; noLink?: boolean; subItems?: { label: string; href: string }[] }) => {
     const isHashLink = item.href.startsWith('/#');
     const hasSubItems = item.subItems && item.subItems.length > 0;
     
@@ -119,13 +136,21 @@ export const Navigation = () => {
           onMouseEnter={() => setOpenSubmenu(item.label)}
         >
           <div className="flex items-center justify-between">
-            <Link
-              to={item.href}
-              onClick={() => handleNavClick(item.href)}
-              className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors flex-1"
-            >
-              {item.label}
-            </Link>
+            {item.noLink ? (
+              <span
+                className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors flex-1 cursor-default"
+              >
+                {item.label}
+              </span>
+            ) : (
+              <Link
+                to={item.href}
+                onClick={() => handleNavClick(item.href)}
+                className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors flex-1"
+              >
+                {item.label}
+              </Link>
+            )}
             <button
               onClick={() => setOpenSubmenu(isSubmenuOpen ? null : item.label)}
               className="p-2 text-muted-foreground hover:text-primary transition-colors"
