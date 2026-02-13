@@ -133,15 +133,15 @@ export const Navigation = () => {
       return (
         <div 
           key={item.href}
-          onMouseEnter={() => setOpenSubmenu(item.label)}
         >
           <div className="flex items-center justify-between">
             {item.noLink ? (
-              <span
-                className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors flex-1 cursor-default"
+              <button
+                onClick={() => setOpenSubmenu(isSubmenuOpen ? null : item.label)}
+                className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors flex-1 cursor-pointer text-left"
               >
                 {item.label}
-              </span>
+              </button>
             ) : (
               <Link
                 to={item.href}
