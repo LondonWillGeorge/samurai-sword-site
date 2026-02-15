@@ -19,8 +19,8 @@ const navItems = [
     href: '#',
     noLink: true,
     subItems: [
-      { label: 'Club Photos', href: '/gallery' },
-      { label: 'Club Videos', href: '/videos' },
+      { label: 'Club Photos New and Old', href: '/gallery' },
+      { label: 'Tenshin Ryu In Motion', href: '/videos' },
     ]
   },
   { label: 'Schools', href: '/schools' },
