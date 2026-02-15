@@ -12,7 +12,7 @@ const RenshiNikandrovs = () => {
             <div className="text-center mb-16">
               <p className="text-primary tracking-[0.3em] text-sm mb-4">INSTRUCTORS</p>
               <h2 className="font-heading text-4xl md:text-5xl text-foreground mb-4">
-                Renshi Nikandrovs
+                Renshi Deniss Nikandrovs
               </h2>
               <div className="section-divider" />
             </div>
@@ -41,7 +41,7 @@ const RenshiNikandrovs = () => {
 
                   <div className="space-y-4 text-muted-foreground leading-relaxed">
                     <p>
-                      Renshi Nikandrovs learnt the art of Iaido under the direct tutelage of Shihan Mike Selvey, absorbing the traditional techniques and philosophy passed down through the lineage.
+                      Deniss Nikandrovs learnt the art of Iaido under the direct tutelage of Shihan Mike Selvey, absorbing the traditional techniques and philosophy passed down through the lineage.
                     </p>
                     <p>
                       Alongside his Iaido training, he studied Kendo separately, broadening his understanding of the Japanese sword arts and developing a well-rounded martial foundation.
