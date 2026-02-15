@@ -42,7 +42,7 @@ export const HeroSection = () => {
         
         <div className="section-divider mb-8" />
         
-        <p className="text-foreground/90 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mb-10 animate-fade-in drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ animationDelay: '0.3s' }}>
+        <p className="text-foreground/90 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto mb-4 md:mb-10 animate-fade-in drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" style={{ animationDelay: '0.3s' }}>
           A 550 year old style of Japanese swordsmanship, harmonising oneself through action.<br/>
           Train with us in South London, in Tenshin Ryu <span className="text-primary font-bold">天心流</span>.<br/>
           Complete beginners and experienced Martial Artists welcome!<br/>
@@ -52,15 +52,15 @@ export const HeroSection = () => {
         
         <a
           href="#about"
-          className="inline-block px-8 py-3 border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 tracking-widest text-sm uppercase"
+          className="relative z-10 inline-block px-8 py-3 mb-6 md:mb-0 border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 tracking-widest text-sm uppercase"
         >
           Enter the Dojo
         </a>
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-px h-16 bg-gradient-to-b from-primary to-transparent" />
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce pointer-events-none">
+        <div className="w-px h-10 md:h-16 bg-gradient-to-b from-primary to-transparent" />
       </div>
     </section>
   );

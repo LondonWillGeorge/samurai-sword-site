@@ -15,7 +15,7 @@ export const Footer = () => {
           <div className="section-divider mb-6" />
 
           <p className="text-muted-foreground text-xs">
-            © {new Date().getFullYear()} Yodokan UK. All rights reserved.
+            © {new Date().getFullYear()} Otani Budo Schools. All rights reserved.
           </p>
         </div>
       </div>
