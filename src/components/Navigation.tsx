@@ -13,7 +13,15 @@ const navItems = [
       { label: 'Ogawa Kinnosuke', href: '/lineage/ogawa-kinnosuke' },
     ]
   },
-  { label: 'Instructors', href: '/instructors' },
+  { 
+    label: 'Instructors', 
+    href: '#',
+    noLink: true,
+    subItems: [
+      { label: 'Shihan Selvey', href: '/instructors/shihan-selvey' },
+      { label: 'Renshi Nikandrovs', href: '/instructors/renshi-nikandrovs' },
+    ]
+  },
   { 
     label: 'Gallery', 
     href: '#',
