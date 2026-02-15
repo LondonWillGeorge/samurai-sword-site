@@ -53,7 +53,7 @@ const RenshiNikandrovs = () => {
 
                   <div className="pt-4 border-t border-border">
                     <p className="text-sm text-muted-foreground">
-                      <span className="text-foreground">Training location:</span> Tsunami Yodokan, Carshalton, Surrey
+                      <span className="text-foreground">Training location:</span> Tonbo Yodokan, Carshalton, Surrey
                     </p>
                   </div>
 
