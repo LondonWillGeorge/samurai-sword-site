@@ -32,7 +32,7 @@ const RenshiNikandrovs = () => {
                 <div className="space-y-6">
                   <div>
                     <h3 className="font-heading text-3xl text-foreground mb-2">
-                      Renshi Nikandrovs
+                      Renshi Deniss Nikandrovs
                     </h3>
                     <p className="text-primary tracking-wider text-sm">
                       4th Dan Iaido • Renshi
@@ -50,6 +50,13 @@ const RenshiNikandrovs = () => {
                       Now holding the rank of 4th Dan in Iaido, he has been bestowed with the prestigious title of Renshi by the Dai Nippon Butoku Kai (DNBK), recognising his dedication, skill, and commitment to the martial way.
                     </p>
                   </div>
+
+                  <div className="pt-4 border-t border-border">
+                    <p className="text-sm text-muted-foreground">
+                      <span className="text-foreground">Training location:</span> Tsunami Yodokan, Carshalton, Surrey
+                    </p>
+                  </div>
+
                 </div>
               </div>
             </div>
