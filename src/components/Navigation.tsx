@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Menu, X, ChevronDown, Phone, Mail } from 'lucide-react';
+import { Menu, X, ChevronDown, Phone, Mail, LogIn, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const navItems = [
   { label: 'About', href: '/#about' },
@@ -36,9 +37,15 @@ const navItems = [
   { label: 'Contact / Free Trial', href: '/free-trial', highlight: true },
 ];
 
+const authNavItems = {
+  loggedIn: { label: 'Messages', href: '/messages', icon: MessageSquare },
+  loggedOut: { label: 'Login', href: '/login', icon: LogIn },
+};
 export const Navigation = () => {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const authItem = user ? authNavItems.loggedIn : authNavItems.loggedOut;
 
   const handleNavClick = (href: string) => {
     setIsOpen(false);
@@ -249,6 +256,13 @@ export const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map(renderNavLink)}
+            <Link
+              to={authItem.href}
+              className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-1.5"
+            >
+              <authItem.icon size={14} />
+              {authItem.label}
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -275,6 +289,14 @@ export const Navigation = () => {
               </a>
             </div>
             {navItems.map(renderMobileNavLink)}
+            <Link
+              to={authItem.href}
+              onClick={() => setIsOpen(false)}
+              className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5"
+            >
+              <authItem.icon size={14} />
+              {authItem.label}
+            </Link>
           </div>
         )}
       </div>
