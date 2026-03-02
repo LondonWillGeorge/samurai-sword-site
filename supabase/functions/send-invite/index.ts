@@ -57,9 +57,10 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: inviteError.message }), { status: 400, headers: corsHeaders })
     }
 
-    // Use Supabase admin to invite user by email
+    // Use the app's preview URL for the redirect
+    const appUrl = 'https://id-preview--17849ad1-fdcc-465b-a06f-e31173f58f90.lovable.app';
     const { data: inviteData, error: authError } = await adminClient.auth.admin.inviteUserByEmail(email, {
-      redirectTo: `${req.headers.get('origin') || 'https://id-preview--17849ad1-fdcc-465b-a06f-e31173f58f90.lovable.app'}/accept-invite`,
+      redirectTo: `${appUrl}/accept-invite`,
     })
 
     if (authError) {

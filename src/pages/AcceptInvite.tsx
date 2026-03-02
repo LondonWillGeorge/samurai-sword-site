@@ -18,9 +18,18 @@ const AcceptInvite = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   useEffect(() => {
-    // Check for recovery/invite flow from URL hash
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const error = hashParams.get('error');
+    const errorDesc = hashParams.get('error_description');
+
+    if (error) {
+      setErrorMessage(errorDesc?.replace(/\+/g, ' ') || 'The invitation link is invalid or has expired.');
+      return;
+    }
+
     const type = hashParams.get('type');
     if (type === 'invite' || type === 'signup' || type === 'recovery') {
       setIsValid(true);
@@ -65,7 +74,13 @@ const AcceptInvite = () => {
         <Navigation />
         <main className="pt-32 pb-20">
           <div className="container mx-auto px-4 max-w-md text-center">
-            <p className="text-muted-foreground">Invalid or expired invitation link.</p>
+            <h1 className="font-heading text-2xl mb-4 tracking-wider">Invitation Issue</h1>
+            <p className="text-muted-foreground mb-6">
+              {errorMessage || 'Invalid or expired invitation link.'}
+            </p>
+            {errorMessage && (
+              <p className="text-sm text-muted-foreground">Please ask an admin to send you a new invitation.</p>
+            )}
           </div>
         </main>
         <Footer />
