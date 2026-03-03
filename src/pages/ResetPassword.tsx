@@ -41,13 +41,18 @@ const ResetPassword = () => {
       return;
     }
     setIsLoading(true);
-    const { error } = await supabase.auth.updateUser({ password });
-    setIsLoading(false);
-    if (error) {
-      toast({ title: 'Error', description: error.message, variant: 'destructive' });
-    } else {
-      toast({ title: 'Password updated successfully' });
-      navigate('/messages');
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) {
+        toast({ title: 'Error', description: error.message, variant: 'destructive' });
+      } else {
+        toast({ title: 'Password updated successfully' });
+        navigate('/messages');
+      }
+    } catch (err: any) {
+      toast({ title: 'Error', description: err?.message || 'Something went wrong', variant: 'destructive' });
+    } finally {
+      setIsLoading(false);
     }
   };
 
