@@ -36,10 +36,19 @@ const Messages = () => {
   const fetchThreads = async () => {
     const { data, error } = await supabase
       .from('message_threads')
-      .select('*, profiles!message_threads_user_id_fkey(display_name, email)')
+      .select('*')
       .order('updated_at', { ascending: false });
     if (!error && data) {
-      setThreads(data.map(t => ({ ...t, profiles: Array.isArray(t.profiles) ? t.profiles[0] : t.profiles })));
+      const userIds = [...new Set(data.map(t => t.user_id))];
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('user_id, display_name, email')
+        .in('user_id', userIds);
+      const profileMap = (profilesData || []).reduce<Record<string, { display_name: string | null; email: string | null }>>((acc, p) => {
+        acc[p.user_id] = p;
+        return acc;
+      }, {});
+      setThreads(data.map(t => ({ ...t, profiles: profileMap[t.user_id] || null })));
     }
   };
 
