@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Menu, X, ChevronDown, Phone, Mail, LogIn, MessageSquare } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Menu, X, ChevronDown, Phone, Mail, LogIn, MessageSquare, LogOut } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 const navItems = [
@@ -42,10 +42,17 @@ const authNavItems = {
   loggedOut: { label: 'Login', href: '/login', icon: LogIn },
 };
 export const Navigation = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const authItem = user ? authNavItems.loggedIn : authNavItems.loggedOut;
+
+  const handleSignOut = async () => {
+    setIsOpen(false);
+    await signOut();
+    navigate('/');
+  };
 
   const handleNavClick = (href: string) => {
     setIsOpen(false);
@@ -263,6 +270,15 @@ export const Navigation = () => {
               <authItem.icon size={14} />
               {authItem.label}
             </Link>
+            {user && (
+              <button
+                onClick={handleSignOut}
+                className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-1.5"
+              >
+                <LogOut size={14} />
+                Sign Out
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -297,6 +313,15 @@ export const Navigation = () => {
               <authItem.icon size={14} />
               {authItem.label}
             </Link>
+            {user && (
+              <button
+                onClick={handleSignOut}
+                className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 w-full text-left"
+              >
+                <LogOut size={14} />
+                Sign Out
+              </button>
+            )}
           </div>
         )}
       </div>
