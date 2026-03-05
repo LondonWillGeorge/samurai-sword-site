@@ -88,7 +88,13 @@ const Messages = () => {
     navigate('/');
   };
 
-  if (loading || !user) return null;
+  if (loading) return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-muted-foreground text-sm tracking-widest">Loading...</div>
+    </div>
+  );
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-background">
