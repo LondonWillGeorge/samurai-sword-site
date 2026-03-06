@@ -103,8 +103,9 @@ const Messages = () => {
         <div className="container mx-auto px-4 max-w-3xl">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
-            <h1 className="font-heading text-3xl tracking-wider">掲示板 <span className="text-lg text-muted-foreground ml-2">Message Board</span></h1>
+            <h1 className="font-heading text-3xl tracking-wider">掲示板 <span className="text-lg text-muted-foreground ml-2">Message Board - Please be Polite!</span></h1>
             <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground hidden sm:inline">{user.email}</span>
               <Link to="/change-password">
                 <Button variant="ghost" size="sm"><KeyRound size={16} className="mr-1" /> Password</Button>
               </Link>

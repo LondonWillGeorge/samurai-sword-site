@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, ChevronDown, Phone, Mail, LogIn, MessageSquare, LogOut } from 'lucide-react';
+import { Menu, X, ChevronDown, Phone, Mail, LogIn, LogOut } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -37,16 +37,11 @@ const navItems = [
   { label: 'Contact / Free Trial', href: '/free-trial', highlight: true },
 ];
 
-const authNavItems = {
-  loggedIn: { label: 'Messages', href: '/messages', icon: MessageSquare },
-  loggedOut: { label: 'Login', href: '/login', icon: LogIn },
-};
 export const Navigation = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
-  const authItem = user ? authNavItems.loggedIn : authNavItems.loggedOut;
 
   const handleSignOut = async () => {
     setIsOpen(false);
@@ -263,13 +258,37 @@ export const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map(renderNavLink)}
-            <Link
-              to={authItem.href}
-              className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-1.5"
-            >
-              <authItem.icon size={14} />
-              {authItem.label}
-            </Link>
+            {user ? (
+              <div
+                className="relative group"
+                onMouseEnter={() => setOpenSubmenu('Members')}
+                onMouseLeave={() => setOpenSubmenu(null)}
+              >
+                <span className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-1 py-2 cursor-default">
+                  Members
+                  <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
+                </span>
+                <div className="absolute top-full left-0 h-2 w-full" />
+                {openSubmenu === 'Members' && (
+                  <div className="absolute top-[calc(100%+0.5rem)] left-0 bg-background border border-border rounded-sm shadow-lg min-w-48 py-2 z-50">
+                    <Link
+                      to="/messages"
+                      className="block px-4 py-2 text-sm tracking-wider text-muted-foreground hover:text-primary hover:bg-secondary transition-colors"
+                    >
+                      Messages
+                    </Link>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-1.5"
+              >
+                <LogIn size={14} />
+                Login
+              </Link>
+            )}
             {user && (
               <button
                 onClick={handleSignOut}
@@ -305,14 +324,47 @@ export const Navigation = () => {
               </a>
             </div>
             {navItems.map(renderMobileNavLink)}
-            <Link
-              to={authItem.href}
-              onClick={() => setIsOpen(false)}
-              className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5"
-            >
-              <authItem.icon size={14} />
-              {authItem.label}
-            </Link>
+            {user ? (
+              <div>
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={() => setOpenSubmenu(openSubmenu === 'Members' ? null : 'Members')}
+                    className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors flex-1 cursor-pointer text-left"
+                  >
+                    Members
+                  </button>
+                  <button
+                    onClick={() => setOpenSubmenu(openSubmenu === 'Members' ? null : 'Members')}
+                    className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform duration-200 ${openSubmenu === 'Members' ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                </div>
+                <div className={`overflow-hidden transition-all duration-200 ${openSubmenu === 'Members' ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <div className="pl-4 border-l border-border ml-2">
+                    <Link
+                      to="/messages"
+                      onClick={() => { setIsOpen(false); setOpenSubmenu(null); }}
+                      className="block py-2 text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Messages
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setIsOpen(false)}
+                className="block py-3 text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5"
+              >
+                <LogIn size={14} />
+                Login
+              </Link>
+            )}
             {user && (
               <button
                 onClick={handleSignOut}
