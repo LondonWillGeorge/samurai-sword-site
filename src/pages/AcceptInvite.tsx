@@ -25,12 +25,15 @@ const AcceptInvite = () => {
     const tokenHash = searchParams.get('token_hash');
     const type = searchParams.get('type');
 
-    if (tokenHash && type === 'invite') {
+    if (tokenHash && (type === 'invite' || type === 'magiclink')) {
       // New flow: verify token directly on our domain
-      supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'invite' })
+      supabase.auth.verifyOtp({ token_hash: tokenHash, type: type as 'invite' | 'magiclink' })
         .then(({ data, error }) => {
           if (error) {
             setErrorMessage(error.message);
+          } else if (type === 'magiclink') {
+            // Already a confirmed member — go straight to messages
+            navigate('/messages');
           } else {
             setEmail(data.user?.email || '');
             setIsValid(true);
