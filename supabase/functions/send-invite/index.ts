@@ -48,16 +48,28 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Email is required' }), { status: 400, headers: corsHeaders })
     }
 
+    // Check if user already exists in auth
+    const { data: { users } } = await adminClient.auth.admin.listUsers({ perPage: 1000 })
+    const existingUser = users?.find(u => u.email?.toLowerCase() === email.toLowerCase())
+
+    if (existingUser) {
+      if (existingUser.email_confirmed_at) {
+        // Fully confirmed member — cannot re-invite
+        return new Response(
+          JSON.stringify({ error: 'This email is already registered as a member.' }),
+          { status: 400, headers: corsHeaders }
+        )
+      }
+      // Unconfirmed (previous pending invite expired) — delete and re-invite
+      await adminClient.auth.admin.deleteUser(existingUser.id)
+    }
+
     // Record the invitation
-    const { error: inviteError } = await adminClient
+    await adminClient
       .from('invitations')
       .insert({ email, invited_by: callingUser.id })
 
-    if (inviteError) {
-      return new Response(JSON.stringify({ error: inviteError.message }), { status: 400, headers: corsHeaders })
-    }
-
-    // Generate the invite link without sending Supabase's default email
+    // Generate invite link without sending Supabase's default email
     const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
       type: 'invite',
       email,
@@ -68,10 +80,13 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: linkError.message }), { status: 400, headers: corsHeaders })
     }
 
-    const inviteLink = linkData?.properties?.action_link
-    if (!inviteLink) {
+    const hashedToken = linkData?.properties?.hashed_token
+    if (!hashedToken) {
       return new Response(JSON.stringify({ error: 'Failed to generate invite link' }), { status: 500, headers: corsHeaders })
     }
+
+    // Build invite URL on our own domain using hashed_token (avoids supabase.co redirect)
+    const inviteLink = `${redirectTo}?token_hash=${hashedToken}&type=invite`
 
     // Send invite email via Resend
     const { error: emailError } = await resend.emails.send({

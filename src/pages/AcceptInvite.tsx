@@ -18,9 +18,28 @@ const AcceptInvite = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const [searchParams] = useSearchParams();
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
+    const tokenHash = searchParams.get('token_hash');
+    const type = searchParams.get('type');
+
+    if (tokenHash && type === 'invite') {
+      // New flow: verify token directly on our domain
+      supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'invite' })
+        .then(({ data, error }) => {
+          if (error) {
+            setErrorMessage(error.message);
+          } else {
+            setEmail(data.user?.email || '');
+            setIsValid(true);
+          }
+        });
+      return;
+    }
+
+    // Old flow: Supabase redirects back with hash params after processing action_link
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const error = hashParams.get('error');
     const errorDesc = hashParams.get('error_description');
@@ -30,8 +49,8 @@ const AcceptInvite = () => {
       return;
     }
 
-    const type = hashParams.get('type');
-    if (type === 'invite' || type === 'signup' || type === 'recovery') {
+    const hashType = hashParams.get('type');
+    if (hashType === 'invite' || hashType === 'signup' || hashType === 'recovery') {
       setIsValid(true);
     }
 
