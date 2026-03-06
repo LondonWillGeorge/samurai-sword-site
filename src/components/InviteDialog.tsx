@@ -28,7 +28,12 @@ export const InviteDialog = ({ open, onOpenChange }: InviteDialogProps) => {
 
     setIsLoading(false);
     if (error) {
-      toast({ title: 'Error sending invite', description: error.message, variant: 'destructive' });
+      let message = error.message;
+      try {
+        const body = await (error as any).context.json();
+        if (body?.error) message = body.error;
+      } catch {}
+      toast({ title: 'Error sending invite', description: message, variant: 'destructive' });
     } else {
       toast({ title: 'Invitation sent!', description: `An invite has been sent to ${email}` });
       setEmail('');
