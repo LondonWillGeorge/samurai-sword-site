@@ -21,8 +21,9 @@ export const InviteDialog = ({ open, onOpenChange }: InviteDialogProps) => {
     if (!email.trim()) return;
     setIsLoading(true);
 
+    const redirectTo = `${window.location.origin}${import.meta.env.BASE_URL}accept-invite`;
     const { error } = await supabase.functions.invoke('send-invite', {
-      body: { email: email.trim() },
+      body: { email: email.trim(), redirectTo },
     });
 
     setIsLoading(false);
