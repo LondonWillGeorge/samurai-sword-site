@@ -51,13 +51,22 @@ const ThreadDetail = () => {
 
   const fetchMessages = async () => {
     if (!id) return;
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('conversation_messages')
-      .select('*, profiles!thread_messages_user_id_fkey(display_name, email)')
+      .select('*')
       .eq('thread_id', id)
       .order('created_at', { ascending: true });
-    if (data) {
-      setMessages(data.map(m => ({ ...m, profiles: Array.isArray(m.profiles) ? m.profiles[0] : m.profiles })));
+    if (!error && data) {
+      const userIds = [...new Set(data.map(m => m.user_id))];
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('user_id, display_name, email')
+        .in('user_id', userIds);
+      const profileMap = (profilesData || []).reduce<Record<string, { display_name: string | null; email: string | null }>>((acc, p) => {
+        acc[p.user_id] = p;
+        return acc;
+      }, {});
+      setMessages(data.map(m => ({ ...m, profiles: profileMap[m.user_id] || null })));
     }
   };
 

@@ -6,6 +6,8 @@ import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { MessageSquarePlus, Users, LogOut, KeyRound } from 'lucide-react';
 import { InviteDialog } from '@/components/InviteDialog';
@@ -22,6 +24,7 @@ const Messages = () => {
   const { user, isAdmin, signOut, loading } = useAuth();
   const [threads, setThreads] = useState<Thread[]>([]);
   const [newTitle, setNewTitle] = useState('');
+  const [newFirstMessage, setNewFirstMessage] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
   const navigate = useNavigate();
@@ -71,16 +74,25 @@ const Messages = () => {
     e.preventDefault();
     if (!newTitle.trim() || !user) return;
     setIsCreating(true);
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('conversation_titles')
-      .insert({ title: newTitle.trim(), user_id: user.id });
-    setIsCreating(false);
+      .insert({ title: newTitle.trim(), user_id: user.id })
+      .select('id')
+      .single();
     if (error) {
-      toast({ title: 'Error creating thread', description: error.message, variant: 'destructive' });
-    } else {
-      setNewTitle('');
-      fetchThreads();
+      toast({ title: 'Error creating conversation', description: error.message, variant: 'destructive' });
+      setIsCreating(false);
+      return;
     }
+    if (newFirstMessage.trim() && data?.id) {
+      await supabase
+        .from('conversation_messages')
+        .insert({ thread_id: data.id, user_id: user.id, content: newFirstMessage.trim() });
+    }
+    setIsCreating(false);
+    setNewTitle('');
+    setNewFirstMessage('');
+    fetchThreads();
   };
 
   const handleSignOut = async () => {
@@ -125,17 +137,35 @@ const Messages = () => {
             <span className="font-heading text-3xl text-foreground">Message Board <span className="text-accent">Please be Polite!</span></span>
           </div>
 
-          {/* New thread form */}
-          <form onSubmit={handleCreateThread} className="flex gap-3 mb-8">
-            <Input
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="Start a new discussion..."
-              className="flex-1"
-              maxLength={200}
-            />
+          {/* New conversation form */}
+          <form onSubmit={handleCreateThread} className="space-y-3 mb-8 p-4 bg-card border border-border rounded-sm">
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="new-title">Title <span className="text-muted-foreground font-normal">(required)</span></Label>
+                <span className="text-xs text-muted-foreground">{newTitle.length}/100</span>
+              </div>
+              <Input
+                id="new-title"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                placeholder="Conversation title..."
+                maxLength={100}
+                required
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="new-message">First message <span className="text-muted-foreground font-normal">(optional)</span></Label>
+              <Textarea
+                id="new-message"
+                value={newFirstMessage}
+                onChange={(e) => setNewFirstMessage(e.target.value)}
+                placeholder="Write an opening message..."
+                className="min-h-[80px]"
+                maxLength={2000}
+              />
+            </div>
             <Button type="submit" disabled={isCreating || !newTitle.trim()}>
-              <MessageSquarePlus size={16} className="mr-1" /> Post
+              <MessageSquarePlus size={16} className="mr-1" /> Start Conversation
             </Button>
           </form>
 
