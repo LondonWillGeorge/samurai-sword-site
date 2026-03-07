@@ -41,7 +41,7 @@ export type Database = {
         }
         Relationships: []
       }
-      message_threads: {
+      conversation_titles: {
         Row: {
           created_at: string
           id: string
@@ -92,7 +92,7 @@ export type Database = {
         }
         Relationships: []
       }
-      thread_messages: {
+      conversation_messages: {
         Row: {
           content: string
           created_at: string
@@ -119,7 +119,7 @@ export type Database = {
             foreignKeyName: "thread_messages_thread_id_fkey"
             columns: ["thread_id"]
             isOneToOne: false
-            referencedRelation: "message_threads"
+            referencedRelation: "conversation_titles"
             referencedColumns: ["id"]
           },
         ]

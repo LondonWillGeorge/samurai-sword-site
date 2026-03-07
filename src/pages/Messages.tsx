@@ -35,7 +35,7 @@ const Messages = () => {
 
   const fetchThreads = async () => {
     const { data, error } = await supabase
-      .from('message_threads')
+      .from('conversation_titles')
       .select('*')
       .order('updated_at', { ascending: false });
     if (!error && data) {
@@ -60,7 +60,7 @@ const Messages = () => {
   useEffect(() => {
     const channel = supabase
       .channel('threads-realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'message_threads' }, () => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'conversation_titles' }, () => {
         fetchThreads();
       })
       .subscribe();
@@ -72,7 +72,7 @@ const Messages = () => {
     if (!newTitle.trim() || !user) return;
     setIsCreating(true);
     const { error } = await supabase
-      .from('message_threads')
+      .from('conversation_titles')
       .insert({ title: newTitle.trim(), user_id: user.id });
     setIsCreating(false);
     if (error) {
@@ -103,21 +103,26 @@ const Messages = () => {
         <div className="container mx-auto px-4 max-w-3xl">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
-            <h1 className="font-heading text-3xl tracking-wider">掲示板 <span className="text-lg text-muted-foreground ml-2">Message Board - Please be Polite!</span></h1>
+            <h1 className="font-heading text-3xl tracking-wider"><span className="text-primary">掲</span>示板</h1>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground hidden sm:inline">{user.email}</span>
               <Link to="/change-password">
-                <Button variant="ghost" size="sm"><KeyRound size={16} className="mr-1" /> Password</Button>
+              {/* To set Button without outline: variant="ghost" */}
+                <Button variant="outline" size="sm"><KeyRound size={16} className="mr-1" />Change Password</Button>
               </Link>
               {isAdmin && (
                 <Button variant="outline" size="sm" onClick={() => setShowInvite(true)}>
                   <Users size={16} className="mr-1" /> Invite
                 </Button>
               )}
-              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
                 <LogOut size={16} className="mr-1" /> Sign Out
               </Button>
             </div>
+          </div>
+
+          <div className="flex items-center justify-center mb-8">
+            <span className="font-heading text-3xl text-foreground">Message Board <span className="text-accent">Please be Polite!</span></span>
           </div>
 
           {/* New thread form */}

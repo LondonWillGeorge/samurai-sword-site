@@ -42,7 +42,7 @@ const ThreadDetail = () => {
   const fetchThread = async () => {
     if (!id) return;
     const { data } = await supabase
-      .from('message_threads')
+      .from('conversation_titles')
       .select('*')
       .eq('id', id)
       .single();
@@ -52,7 +52,7 @@ const ThreadDetail = () => {
   const fetchMessages = async () => {
     if (!id) return;
     const { data } = await supabase
-      .from('thread_messages')
+      .from('conversation_messages')
       .select('*, profiles!thread_messages_user_id_fkey(display_name, email)')
       .eq('thread_id', id)
       .order('created_at', { ascending: true });
@@ -73,7 +73,7 @@ const ThreadDetail = () => {
     if (!id) return;
     const channel = supabase
       .channel(`thread-${id}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'thread_messages', filter: `thread_id=eq.${id}` }, () => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'conversation_messages', filter: `thread_id=eq.${id}` }, () => {
         fetchMessages();
       })
       .subscribe();
@@ -89,7 +89,7 @@ const ThreadDetail = () => {
     if (!newMessage.trim() || !user || !id) return;
     setIsSending(true);
     const { error } = await supabase
-      .from('thread_messages')
+      .from('conversation_messages')
       .insert({ thread_id: id, user_id: user.id, content: newMessage.trim() });
     setIsSending(false);
     if (error) {
