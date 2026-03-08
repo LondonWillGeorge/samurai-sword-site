@@ -113,8 +113,12 @@ const ThreadDetail = () => {
   const handleDeleteMessage = async () => {
     if (!pendingDeleteId) return;
     const { error } = await supabase.from('conversation_messages').delete().eq('id', pendingDeleteId);
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    } else {
+      setMessages(prev => prev.filter(m => m.id !== pendingDeleteId));
+    }
     setPendingDeleteId(null);
-    if (error) toast({ title: 'Error', description: error.message, variant: 'destructive' });
   };
 
   if (loading || !user) return null;
