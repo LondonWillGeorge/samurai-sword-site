@@ -6,6 +6,7 @@ import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Send, Trash2 } from 'lucide-react';
 
@@ -31,6 +32,7 @@ const ThreadDetail = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -108,8 +110,10 @@ const ThreadDetail = () => {
     }
   };
 
-  const handleDeleteMessage = async (messageId: string) => {
-    const { error } = await supabase.from('thread_messages').delete().eq('id', messageId);
+  const handleDeleteMessage = async () => {
+    if (!pendingDeleteId) return;
+    const { error } = await supabase.from('conversation_messages').delete().eq('id', pendingDeleteId);
+    setPendingDeleteId(null);
     if (error) toast({ title: 'Error', description: error.message, variant: 'destructive' });
   };
 
@@ -144,7 +148,7 @@ const ThreadDetail = () => {
                         {new Date(msg.created_at).toLocaleString()}
                       </span>
                       {(msg.user_id === user.id || isAdmin) && (
-                        <button onClick={() => handleDeleteMessage(msg.id)} className="text-muted-foreground hover:text-destructive transition-colors">
+                        <button onClick={() => setPendingDeleteId(msg.id)} className="text-muted-foreground hover:text-destructive transition-colors">
                           <Trash2 size={14} />
                         </button>
                       )}
@@ -173,6 +177,19 @@ const ThreadDetail = () => {
         </div>
       </main>
       <Footer />
+
+      <AlertDialog open={!!pendingDeleteId} onOpenChange={(open) => { if (!open) setPendingDeleteId(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete message?</AlertDialogTitle>
+            <AlertDialogDescription>Are you sure you want to delete this message?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>No</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteMessage}>Yes</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

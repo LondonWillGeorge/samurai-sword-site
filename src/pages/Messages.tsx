@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { MessageSquarePlus, Users, LogOut, KeyRound } from 'lucide-react';
+import { MessageSquarePlus, Users, LogOut, KeyRound, Archive, ArchiveRestore } from 'lucide-react';
 import { InviteDialog } from '@/components/InviteDialog';
 
 interface Thread {
@@ -17,6 +17,7 @@ interface Thread {
   title: string;
   user_id: string;
   created_at: string;
+  archived: boolean;
   profiles?: { display_name: string | null; email: string | null } | null;
 }
 
@@ -95,6 +96,15 @@ const Messages = () => {
     fetchThreads();
   };
 
+  const handleArchive = async (threadId: string, currentArchived: boolean) => {
+    const { error } = await supabase
+      .from('conversation_titles')
+      .update({ archived: !currentArchived })
+      .eq('id', threadId);
+    if (error) toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    else fetchThreads();
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
@@ -108,6 +118,32 @@ const Messages = () => {
 
   if (!user) return null;
 
+  const activeThreads = threads.filter(t => !t.archived);
+  const archivedThreads = threads.filter(t => t.archived);
+
+  const renderThread = (thread: Thread) => (
+    <div key={thread.id} className="flex items-center gap-2">
+      <Link
+        to={`/messages/${thread.id}`}
+        className="flex-1 block p-4 bg-card border border-border hover:border-primary/50 transition-colors rounded-sm"
+      >
+        <h3 className="font-heading text-lg tracking-wide">{thread.title}</h3>
+        <p className="text-xs text-muted-foreground mt-1">
+          by {thread.profiles?.display_name || thread.profiles?.email?.split('@')[0] || 'Unknown'} · {new Date(thread.created_at).toLocaleDateString()}
+        </p>
+      </Link>
+      {isAdmin && (
+        <button
+          onClick={() => handleArchive(thread.id, thread.archived)}
+          title={thread.archived ? 'Unarchive' : 'Archive'}
+          className="p-2 text-muted-foreground hover:text-primary transition-colors flex-shrink-0"
+        >
+          {thread.archived ? <ArchiveRestore size={16} /> : <Archive size={16} />}
+        </button>
+      )}
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -119,7 +155,6 @@ const Messages = () => {
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground hidden sm:inline">{user.email}</span>
               <Link to="/change-password">
-              {/* To set Button without outline: variant="ghost" */}
                 <Button variant="outline" size="sm"><KeyRound size={16} className="mr-1" />Change Password</Button>
               </Link>
               {isAdmin && (
@@ -169,25 +204,26 @@ const Messages = () => {
             </Button>
           </form>
 
-          {/* Thread list */}
+          {/* Active thread list */}
           <div className="space-y-3">
-            {threads.length === 0 ? (
-              <p className="text-center text-muted-foreground py-12">No threads yet. Start the first discussion!</p>
+            {activeThreads.length === 0 ? (
+              <p className="text-center text-muted-foreground py-12">No conversations yet. Start the first discussion!</p>
             ) : (
-              threads.map((thread) => (
-                <Link
-                  key={thread.id}
-                  to={`/messages/${thread.id}`}
-                  className="block p-4 bg-card border border-border hover:border-primary/50 transition-colors rounded-sm"
-                >
-                  <h3 className="font-heading text-lg tracking-wide">{thread.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    by {thread.profiles?.display_name || thread.profiles?.email?.split('@')[0] || 'Unknown'} · {new Date(thread.created_at).toLocaleDateString()}
-                  </p>
-                </Link>
-              ))
+              activeThreads.map(renderThread)
             )}
           </div>
+
+          {/* Archived section — admin only */}
+          {isAdmin && archivedThreads.length > 0 && (
+            <div className="mt-10">
+              <h2 className="font-heading text-lg tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+                <Archive size={16} /> Archived
+              </h2>
+              <div className="space-y-3 opacity-60">
+                {archivedThreads.map(renderThread)}
+              </div>
+            </div>
+          )}
         </div>
       </main>
       <Footer />
