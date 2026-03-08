@@ -7,14 +7,17 @@ import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { ImageLightbox } from '@/components/ImageLightbox';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Send, Trash2 } from 'lucide-react';
+import { validateMessageImage, uploadToCloudinary, getMessageImageUrl, getFullSizeUrl } from '@/lib/cloudinary';
+import { ArrowLeft, Send, Trash2, ImagePlus, X } from 'lucide-react';
 
 interface Message {
   id: string;
   content: string;
   user_id: string;
   created_at: string;
+  image_public_id?: string | null;
   profiles?: { display_name: string | null; email: string | null } | null;
 }
 
@@ -33,6 +36,10 @@ const ThreadDetail = () => {
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageError, setImageError] = useState('');
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -95,18 +102,56 @@ const ThreadDetail = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const error = validateMessageImage(file);
+    if (error) {
+      setImageError(error);
+      setImageFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    } else {
+      setImageFile(file);
+      setImageError('');
+    }
+  };
+
+  const clearImage = () => {
+    setImageFile(null);
+    setImageError('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || !user || !id) return;
+    if ((!newMessage.trim() && !imageFile) || !user || !id) return;
     setIsSending(true);
+
+    let imagePubId: string | undefined;
+    if (imageFile) {
+      try {
+        imagePubId = await uploadToCloudinary(imageFile);
+      } catch (err) {
+        toast({ title: 'Image upload failed', description: (err as Error).message, variant: 'destructive' });
+        setIsSending(false);
+        return;
+      }
+    }
+
     const { error } = await supabase
       .from('conversation_messages')
-      .insert({ thread_id: id, user_id: user.id, content: newMessage.trim() });
+      .insert({
+        thread_id: id,
+        user_id: user.id,
+        content: newMessage.trim(),
+        ...(imagePubId ? { image_public_id: imagePubId } : {}),
+      });
     setIsSending(false);
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } else {
       setNewMessage('');
+      clearImage();
     }
   };
 
@@ -158,7 +203,17 @@ const ThreadDetail = () => {
                       )}
                     </div>
                   </div>
-                  <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                  {msg.content && <p className="text-sm whitespace-pre-wrap">{msg.content}</p>}
+                  {msg.image_public_id && (
+                    <div className="mt-2">
+                      <img
+                        src={getMessageImageUrl(msg.image_public_id)}
+                        alt="attachment"
+                        className="max-h-[100px] rounded-sm cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => setLightboxImage(msg.image_public_id!)}
+                      />
+                    </div>
+                  )}
                 </div>
               ))
             )}
@@ -166,17 +221,45 @@ const ThreadDetail = () => {
           </div>
 
           {/* Reply form */}
-          <form onSubmit={handleSend} className="flex gap-3">
+          <form onSubmit={handleSend} className="space-y-2">
             <Textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Write a reply..."
-              className="flex-1 min-h-[60px]"
+              className="min-h-[60px]"
               maxLength={2000}
             />
-            <Button type="submit" disabled={isSending || !newMessage.trim()} className="self-end">
-              <Send size={16} />
-            </Button>
+            {/* Image attachment row */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".jpg,.jpeg,.png,.gif"
+                className="hidden"
+                onChange={handleFileSelect}
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+              >
+                <ImagePlus size={14} /> Attach image
+              </button>
+              {imageFile && (
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                  {imageFile.name}
+                  <button type="button" onClick={clearImage} className="hover:text-destructive transition-colors">
+                    <X size={12} />
+                  </button>
+                </span>
+              )}
+              {imageError && <span className="text-xs text-destructive">{imageError}</span>}
+            </div>
+            <div className="flex justify-end">
+              <Button type="submit" disabled={isSending || (!newMessage.trim() && !imageFile)}>
+                <Send size={16} />
+              </Button>
+            </div>
           </form>
         </div>
       </main>
@@ -194,6 +277,16 @@ const ThreadDetail = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {lightboxImage && (
+        <ImageLightbox
+          isOpen={!!lightboxImage}
+          onClose={() => setLightboxImage(null)}
+          thumbnailSrc={getMessageImageUrl(lightboxImage)}
+          fullSizeSrc={getFullSizeUrl(lightboxImage)}
+          alt="Message attachment"
+        />
+      )}
     </div>
   );
 };
