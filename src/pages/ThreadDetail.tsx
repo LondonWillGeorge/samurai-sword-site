@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { ImageLightbox } from '@/components/ImageLightbox';
 import { useToast } from '@/hooks/use-toast';
-import { validateMessageImage, uploadToCloudinary, getMessageImageUrl, getFullSizeUrl } from '@/lib/cloudinary';
+import { validateMessageImage, compressImageIfNeeded, uploadToCloudinary, getMessageImageUrl, getFullSizeUrl } from '@/lib/cloudinary';
 import { ArrowLeft, Send, Trash2, ImagePlus, X } from 'lucide-react';
 
 interface Message {
@@ -113,6 +113,7 @@ const ThreadDetail = () => {
     } else {
       setImageFile(file);
       setImageError('');
+      // Note: oversized images are compressed automatically on send
     }
   };
 
@@ -130,7 +131,14 @@ const ThreadDetail = () => {
     let imagePubId: string | undefined;
     if (imageFile) {
       try {
-        imagePubId = await uploadToCloudinary(imageFile);
+        const { file: fileToUpload, compressed, originalKB, compressedKB } = await compressImageIfNeeded(imageFile);
+        if (compressed) {
+          toast({
+            title: 'Hai! I\'m afraid your image was too large, so it is being compressed',
+            description: `Compressing from ${originalKB}kB to ${compressedKB}kB`,
+          });
+        }
+        imagePubId = await uploadToCloudinary(fileToUpload);
       } catch (err) {
         toast({ title: 'Image upload failed', description: (err as Error).message, variant: 'destructive' });
         setIsSending(false);
