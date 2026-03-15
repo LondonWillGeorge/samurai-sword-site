@@ -2,3 +2,12 @@ project_id = "htzowkhdorjlhofonuvu"
 
 [functions.send-contact-email]
 verify_jwt = false
+
+[functions.send-invite]
+verify_jwt = false
+
+[functions.admin-reset-password]
+verify_jwt = false
+
+[functions.bootstrap-reset]
+verify_jwt = false

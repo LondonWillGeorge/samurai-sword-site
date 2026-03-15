@@ -1,6 +1,58 @@
 // Cloudinary configuration and URL helpers
 
+import imageCompression from 'browser-image-compression';
+
 const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || '';
+const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || '';
+
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+const MAX_IMAGE_SIZE_KB = 200;
+
+export const validateMessageImage = (file: File): string | null => {
+  if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+    return 'Only JPEG, PNG and GIF images are accepted.';
+  }
+  return null;
+};
+
+/**
+ * Compresses a file to under MAX_IMAGE_SIZE_KB if needed.
+ * Returns { file, compressed: true, originalKB, compressedKB } if compressed,
+ * or { file, compressed: false } if already small enough.
+ */
+export const compressImageIfNeeded = async (
+  file: File
+): Promise<{ file: File; compressed: boolean; originalKB: number; compressedKB: number }> => {
+  const originalKB = Math.round(file.size / 1024);
+  if (file.size <= MAX_IMAGE_SIZE_KB * 1024) {
+    return { file, compressed: false, originalKB, compressedKB: originalKB };
+  }
+  const compressed = await imageCompression(file, {
+    maxSizeMB: MAX_IMAGE_SIZE_KB / 1024,
+    useWebWorker: true,
+    fileType: 'image/jpeg',
+  });
+  const compressedKB = Math.round(compressed.size / 1024);
+  return { file: compressed, compressed: true, originalKB, compressedKB };
+};
+
+export const uploadToCloudinary = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', UPLOAD_PRESET);
+  formData.append('folder', 'messages');
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+    { method: 'POST', body: formData }
+  );
+  if (!response.ok) throw new Error('Image upload failed');
+  const data = await response.json();
+  return data.public_id as string;
+};
+
+export const getMessageImageUrl = (publicId: string): string => {
+  return getCloudinaryUrl(publicId, { height: 200, crop: 'fit', quality: 'auto', format: 'auto' });
+};
 
 interface CloudinaryTransform {
   width?: number;

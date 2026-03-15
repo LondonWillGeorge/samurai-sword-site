@@ -1,5 +1,13 @@
 # Welcome to your Lovable project
 
+Original Lovable auth.users -> New Supabase tenshinwarrior@gmail.com Account!:
+email	                                id                                      new_id
+will_croxford@hotmail.com	dd22160a-9d41-4699-a7b1-1dd153745c72                7ffc3ca3-b76e-4f4e-9c51-27592f3fdd01
+will@magicmydata.com	    7757cf29-a5f2-43a9-abce-f2853d9e5730                677273a0-fa03-49aa-b35e-3d6a70b016f7
+
+
+
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/17849ad1-fdcc-465b-a06f-e31173f58f90
@@ -14,7 +22,10 @@ Simply visit the [Lovable Project](https://lovable.dev/projects/17849ad1-fdcc-46
 
 Changes made via Lovable will be committed automatically to this repo.
 
-**Use your preferred IDE**
+**Use Claude Code inside VS Code IDE!**
+
+Below are Lovable auto instructions, if someone actually wants to copy this, suggest being ready to use AI to solve installation issues.
+As with all software projects, assume you will get **unexpected problems**.
 
 If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
