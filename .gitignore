@@ -27,3 +27,6 @@ dist-ssr
 *.json
 
 lovable_data_migration/
+
+# Supabase CLI local state
+supabase/.temp/

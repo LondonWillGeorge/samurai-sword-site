@@ -1,16 +1,9 @@
-# Welcome to your Lovable project
-
-Original Lovable auth.users -> New Supabase tenshinwarrior@gmail.com Account!:
-email	                                id                                      new_id
-will_croxford@hotmail.com	dd22160a-9d41-4699-a7b1-1dd153745c72                7ffc3ca3-b76e-4f4e-9c51-27592f3fdd01
-will@magicmydata.com	    7757cf29-a5f2-43a9-abce-f2853d9e5730                677273a0-fa03-49aa-b35e-3d6a70b016f7
-
-
-
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/17849ad1-fdcc-465b-a06f-e31173f58f90
+
+But now I switched development to using Claude Code, more powerful than Lovable, quick to implement new features.
 
 ## How can I edit this code?
 
