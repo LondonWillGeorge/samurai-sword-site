@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.bootstrap-reset]
 verify_jwt = false
+
+[functions.upload-to-youtube]
+verify_jwt = false
