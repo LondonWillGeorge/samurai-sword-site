@@ -71,11 +71,11 @@ export const Navigation = () => {
   const renderNavLink = (item: { label: string; href: string; highlight?: boolean; noLink?: boolean; twoLineLabel?: boolean; subItems?: { label: string; href: string }[] }) => {
     const isHashLink = item.href.startsWith('/#');
     const hasSubItems = item.subItems && item.subItems.length > 0;
-    
+
     if (hasSubItems) {
       return (
-        <div 
-          key={item.href} 
+        <div
+          key={item.label}
           className="relative group"
           onMouseEnter={() => setOpenSubmenu(item.label)}
           onMouseLeave={() => setOpenSubmenu(null)}
@@ -120,7 +120,7 @@ export const Navigation = () => {
     if (isHashLink) {
       return (
         <Link
-          key={item.href}
+          key={item.label}
           to={item.href}
           onClick={() => handleNavClick(item.href)}
           className="text-sm tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
@@ -132,7 +132,7 @@ export const Navigation = () => {
 
     return (
       <Link
-        key={item.href}
+        key={item.label}
         to={item.href}
         className={`text-sm tracking-widest uppercase transition-colors duration-300 ${
           item.highlight
@@ -157,8 +157,8 @@ export const Navigation = () => {
     if (hasSubItems) {
       const isSubmenuOpen = openSubmenu === item.label;
       return (
-        <div 
-          key={item.href}
+        <div
+          key={item.label}
         >
           <div className="flex items-center justify-between">
             {item.noLink ? (
@@ -212,7 +212,7 @@ export const Navigation = () => {
     if (isHashLink) {
       return (
         <Link
-          key={item.href}
+          key={item.label}
           to={item.href}
           onClick={() => handleNavClick(item.href)}
           onMouseEnter={() => setOpenSubmenu(null)}
@@ -225,7 +225,7 @@ export const Navigation = () => {
 
     return (
       <Link
-        key={item.href}
+        key={item.label}
         to={item.href}
         onClick={() => setIsOpen(false)}
         onMouseEnter={() => setOpenSubmenu(null)}
@@ -264,7 +264,7 @@ export const Navigation = () => {
           </div>
 
           {/* Right: Desktop nav + Mobile button */}
-          <div className="flex-none flex items-center">
+          <div className="flex-none flex items-center ml-auto">
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               {navItems.map(renderNavLink)}
@@ -286,6 +286,12 @@ export const Navigation = () => {
                         className="block px-4 py-2 text-sm tracking-wider text-muted-foreground hover:text-primary hover:bg-secondary transition-colors"
                       >
                         Messages
+                      </Link>
+                      <Link
+                        to="/member-videos"
+                        className="block px-4 py-2 text-sm tracking-wider text-muted-foreground hover:text-primary hover:bg-secondary transition-colors"
+                      >
+                        Member Videos
                       </Link>
                     </div>
                   )}
@@ -362,6 +368,13 @@ export const Navigation = () => {
                       className="block py-2 text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors"
                     >
                       Messages
+                    </Link>
+                    <Link
+                      to="/member-videos"
+                      onClick={() => { setIsOpen(false); setOpenSubmenu(null); }}
+                      className="block py-2 text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Member Videos
                     </Link>
                   </div>
                 </div>
