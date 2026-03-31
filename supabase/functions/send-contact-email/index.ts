@@ -9,7 +9,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const NOTIFY_TO = ["will_croxford@hotmail.com"]; // , "tenshinryu@hotmail.co.uk"
+const NOTIFY_TO = ["will_croxford@hotmail.com", "tenshinryu@hotmail.co.uk"];
 // IMPORTANT: Resend requires a verified domain to send to arbitrary recipients.
 // Configure RESEND_FROM as e.g. "Tenshin Warrior <noreply@tenshinwarrior.comk>" after domain verification.
 const FROM_EMAIL = Deno.env.get("RESEND_FROM") || "Tenshin Warrior <onboarding@resend.dev>";
