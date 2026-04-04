@@ -32,10 +32,10 @@ const RenshiNikandrovs = () => {
                 <div className="space-y-6">
                   <div>
                     <h3 className="font-heading text-3xl text-foreground mb-2">
-                      Renshi Deniss Nikandrovs
+                      Sensei Deniss Nikandrovs
                     </h3>
                     <p className="text-primary tracking-wider text-sm">
-                      4th Dan Iaido • Renshi
+                      3rd Dan Iaido
                     </p>
                   </div>
 
@@ -47,7 +47,7 @@ const RenshiNikandrovs = () => {
                       Alongside his Iaido training, he studied Kendo separately, broadening his understanding of the Japanese sword arts and developing a well-rounded martial foundation.
                     </p>
                     <p>
-                      Now holding the rank of 4th Dan in Iaido, he has been bestowed with the prestigious title of Renshi by the Dai Nippon Butoku Kai (DNBK), recognising his dedication, skill, and commitment to the martial way.
+                      Now holding the rank of 3rd Dan in Iaido, Deniss has many years of experience in the art and is dedicated to sharing his knowledge with students of all levels, fostering a deep appreciation for the discipline and spirit of Tenshin Ryu.
                     </p>
                   </div>
 

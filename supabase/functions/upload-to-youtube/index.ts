@@ -158,9 +158,15 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'No video ID in YouTube response' }), { status: 502, headers: corsHeaders })
     }
 
-    console.log(`Upload complete, YouTube ID: ${ytData.id}`)
+    const thumbnailUrl =
+      ytData.snippet?.thumbnails?.high?.url ??
+      ytData.snippet?.thumbnails?.medium?.url ??
+      ytData.snippet?.thumbnails?.default?.url ??
+      `https://img.youtube.com/vi/${ytData.id}/hqdefault.jpg`
+
+    console.log(`Upload complete, YouTube ID: ${ytData.id}, thumbnail: ${thumbnailUrl}`)
     return new Response(
-      JSON.stringify({ youtube_id: ytData.id }),
+      JSON.stringify({ youtube_id: ytData.id, thumbnail_url: thumbnailUrl }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     )
   } catch (error) {
