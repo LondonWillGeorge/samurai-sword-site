@@ -13,7 +13,7 @@ export const HeroSection = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat portrait:[background-size:100%_auto] portrait:bg-top"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
       
