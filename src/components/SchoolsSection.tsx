@@ -21,7 +21,7 @@ const schools = [
   },
   {
     name: 'Tonbo Yodokan',
-    instructor: 'Shidoin Deniss Nikandrovs 4th Dan Renshi',
+    instructor: 'Shidoin Deniss Nikandrovs 3rd Dan',
     address: '12, Beynon Road, Carshalton, Surrey SM5 3RL',
     schedule: 'Tuesdays 19:00 - 20:30',
   },
