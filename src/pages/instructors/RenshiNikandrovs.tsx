@@ -12,7 +12,7 @@ const RenshiNikandrovs = () => {
             <div className="text-center mb-16">
               <p className="text-primary tracking-[0.3em] text-sm mb-4">INSTRUCTORS</p>
               <h2 className="font-heading text-4xl md:text-5xl text-foreground mb-4">
-                Renshi Deniss Nikandrovs
+                Sensei Deniss Nikandrovs
               </h2>
               <div className="section-divider" />
             </div>
@@ -23,7 +23,7 @@ const RenshiNikandrovs = () => {
                   <div className="japanese-border p-3 bg-card">
                     <img
                       src={renshiPhoto}
-                      alt="Renshi Nikandrovs"
+                      alt="Sensei Nikandrovs"
                       className="w-full h-auto"
                     />
                   </div>
