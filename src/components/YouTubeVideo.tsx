@@ -34,6 +34,7 @@ interface YTPlayer {
 
 interface YouTubeVideoProps {
   videoId: string;
+  thumbnailOverride?: string;
   caption?: string;
   aspectRatio?: 'portrait' | 'landscape' | 'square' | 'short-portrait' | 'compact';
   cropToFill?: boolean;
@@ -42,9 +43,10 @@ interface YouTubeVideoProps {
   lazyLoad?: boolean;
 }
 
-export const YouTubeVideo = ({ 
-  videoId, 
-  caption, 
+export const YouTubeVideo = ({
+  videoId,
+  thumbnailOverride,
+  caption,
   aspectRatio = 'portrait',
   cropToFill = false,
   showSpeedSlider = true,
@@ -58,9 +60,10 @@ export const YouTubeVideo = ({
   const [availableSpeeds, setAvailableSpeeds] = useState<number[]>([0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]);
   const playerRef = useRef<string>(`player-${videoId}-${Math.random().toString(36).substr(2, 9)}`);
 
-  // Get thumbnail URL
-  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  const fallbackThumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+  // Use stored thumbnail from upload response if available, otherwise fall back to
+  // maxresdefault.jpg (best quality when set in YouTube Studio) → 1.jpg (always a real frame).
+  const thumbnailUrl = thumbnailOverride ?? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  const fallbackThumbnail = `https://img.youtube.com/vi/${videoId}/1.jpg`;
 
   useEffect(() => {
     if (!isActivated) return;

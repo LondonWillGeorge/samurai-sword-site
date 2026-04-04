@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
-import { FileVideo } from 'lucide-react';
+import { FileVideo, Trash2 } from 'lucide-react';
 
 interface MemberVideo {
   id: string;
@@ -18,10 +18,11 @@ interface MemberVideo {
   title: string;
   uploader_id: string;
   created_at: string;
+  thumbnail_url: string | null;
 }
 
 const MemberVideos = () => {
-  const { user, loading } = useAuth();
+  const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -100,7 +101,7 @@ const MemberVideos = () => {
       };
 
       xhr.onload = async () => {
-        let json: { youtube_id?: string; error?: string };
+        let json: { youtube_id?: string; thumbnail_url?: string; error?: string };
         try {
           json = JSON.parse(xhr.responseText);
         } catch {
@@ -123,6 +124,7 @@ const MemberVideos = () => {
 
         const { error: insertError } = await supabase.from('member_videos').insert({
           youtube_id: json.youtube_id,
+          thumbnail_url: json.thumbnail_url ?? null,
           title: title.trim(),
           uploader_id: user.id,
         });
@@ -148,6 +150,16 @@ const MemberVideos = () => {
     } catch (err) {
       toast({ title: 'Network error', description: (err as Error).message, variant: 'destructive' });
       setUploadProgress(null);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Remove this video from the page? The YouTube video will not be affected.')) return;
+    const { error } = await supabase.from('member_videos').delete().eq('id', id);
+    if (error) {
+      toast({ title: 'Delete failed', description: error.message, variant: 'destructive' });
+    } else {
+      setVideos(prev => prev.filter(v => v.id !== id));
     }
   };
 
@@ -232,14 +244,32 @@ const MemberVideos = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {videos.map((video) => (
-              <YouTubeVideo
-                key={video.id}
-                videoId={video.youtube_id}
-                caption={video.title}
-                aspectRatio="landscape"
-                lazyLoad
-                showSpeedSlider={true}
-              />
+              <div key={video.id}>
+                <div className="flex items-center gap-2 mb-1 min-w-0">
+                  {(isAdmin || video.uploader_id === user?.id) && (
+                    <button
+                      onClick={() => handleDelete(video.id)}
+                      title="Remove from page"
+                      className="shrink-0 p-1 rounded-sm text-muted-foreground hover:text-destructive transition-colors duration-200"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
+                  <span
+                    title={video.title}
+                    className="text-sm tracking-wider text-muted-foreground truncate"
+                  >
+                    {video.title}
+                  </span>
+                </div>
+                <YouTubeVideo
+                  videoId={video.youtube_id}
+                  thumbnailOverride={video.thumbnail_url ?? undefined}
+                  aspectRatio="landscape"
+                  lazyLoad
+                  showSpeedSlider={true}
+                />
+              </div>
             ))}
           </div>
         )}
