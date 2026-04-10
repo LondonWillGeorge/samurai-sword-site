@@ -11,7 +11,7 @@ const schools = [
     name: 'Kyushin Yodokan',
     instructor: 'Geoff Murray 6th Dan Kyoshi',
     address: 'Cowfold Village Hall RH13 8AA',
-    schedule: 'Thursdays 18:00 - 20:00',
+    schedule: 'Thursdays 19:00 - 20:30',
   },
   {
     name: 'Tengu Yodokan',
@@ -21,7 +21,7 @@ const schools = [
   },
   {
     name: 'Tonbo Yodokan',
-    instructor: 'Shidoin Deniss Nikandrovs 3rd Dan',
+    instructor: 'Renshi Deniss Nikandrovs 4th Dan',
     address: '12, Beynon Road, Carshalton, Surrey SM5 3RL',
     schedule: 'Tuesdays 19:00 - 20:30',
   },
