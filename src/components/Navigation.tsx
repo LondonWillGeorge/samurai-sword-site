@@ -20,7 +20,7 @@ const navItems = [
     noLink: true,
     subItems: [
       { label: 'Shihan Selvey', href: '/instructors/shihan-selvey' },
-      { label: 'Sensei Nikandrovs', href: '/instructors/renshi-nikandrovs' },
+      { label: 'Renshi Nikandrovs', href: '/instructors/renshi-nikandrovs' },
     ]
   },
   { 

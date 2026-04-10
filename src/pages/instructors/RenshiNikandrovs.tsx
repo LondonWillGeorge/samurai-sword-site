@@ -12,7 +12,7 @@ const RenshiNikandrovs = () => {
             <div className="text-center mb-16">
               <p className="text-primary tracking-[0.3em] text-sm mb-4">INSTRUCTORS</p>
               <h2 className="font-heading text-4xl md:text-5xl text-foreground mb-4">
-                Sensei Deniss Nikandrovs
+                Renshi Deniss Nikandrovs
               </h2>
               <div className="section-divider" />
             </div>
@@ -23,7 +23,7 @@ const RenshiNikandrovs = () => {
                   <div className="japanese-border p-3 bg-card">
                     <img
                       src={renshiPhoto}
-                      alt="Sensei Nikandrovs"
+                      alt="Renshi Nikandrovs"
                       className="w-full h-auto"
                     />
                   </div>
@@ -32,10 +32,10 @@ const RenshiNikandrovs = () => {
                 <div className="space-y-6">
                   <div>
                     <h3 className="font-heading text-3xl text-foreground mb-2">
-                      Sensei Deniss Nikandrovs
+                      Renshi Deniss Nikandrovs
                     </h3>
                     <p className="text-primary tracking-wider text-sm">
-                      3rd Dan Iaido
+                      4th Dan Iaido
                     </p>
                   </div>
 
@@ -47,7 +47,7 @@ const RenshiNikandrovs = () => {
                       Alongside his Iaido training, he studied Kendo separately, broadening his understanding of the Japanese sword arts and developing a well-rounded martial foundation.
                     </p>
                     <p>
-                      Now holding the rank of 3rd Dan in Iaido, Deniss has many years of experience in the art and is dedicated to sharing his knowledge with students of all levels, fostering a deep appreciation for the discipline and spirit of Tenshin Ryu.
+                      Now holding the rank of 4th Dan in Iaido and the title of Renshi, Deniss has many years of experience in the art and is dedicated to sharing his knowledge with students of all levels, fostering a deep appreciation for the discipline and spirit of Tenshin Ryu.
                     </p>
                   </div>
 
