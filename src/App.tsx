@@ -16,6 +16,7 @@ import Gallery from "./pages/Gallery";
 import Videos from "./pages/Videos";
 import Schools from "./pages/Schools";
 import Events from "./pages/Events";
+import Seminar2026 from "./pages/events/Seminar2026";
 import FreeTrial from "./pages/FreeTrial";
 import Login from "./pages/Login";
 import Messages from "./pages/Messages";
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/videos" element={<Videos />} />
             <Route path="/schools" element={<Schools />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/events/seminar2026" element={<Seminar2026 />} />
             <Route path="/free-trial" element={<FreeTrial />} />
             <Route path="/login" element={<Login />} />
             <Route path="/messages" element={<Messages />} />
