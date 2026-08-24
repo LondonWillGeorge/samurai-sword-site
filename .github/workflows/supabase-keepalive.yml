@@ -10,15 +10,13 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase REST endpoint
+      - name: Ping Supabase auth endpoint
         run: |
           http_code=$(curl -s -o /dev/null -w "%{http_code}" \
-            "${{ secrets.SUPABASE_URL }}/rest/v1/" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
-          echo "Supabase REST endpoint responded with $http_code"
-          # 200/404 both mean the gateway is up and reachable; anything else, fail loudly
-          if [ "$http_code" != "200" ] && [ "$http_code" != "404" ]; then
+            "${{ secrets.SUPABASE_URL }}/auth/v1/settings" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}")
+          echo "Supabase auth endpoint responded with $http_code"
+          if [ "$http_code" != "200" ]; then
             echo "Unexpected response code from Supabase"
             exit 1
           fi
