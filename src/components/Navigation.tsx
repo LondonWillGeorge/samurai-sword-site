@@ -288,7 +288,7 @@ export const Navigation = () => {
                         to="/messages"
                         className="block px-4 py-2 text-sm tracking-wider text-muted-foreground hover:text-primary hover:bg-secondary transition-colors"
                       >
-                        Messages
+                        Messages & Discussions
                       </Link>
                       <Link
                         to="/member-videos"
