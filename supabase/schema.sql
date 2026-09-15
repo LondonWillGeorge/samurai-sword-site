@@ -147,6 +147,45 @@ $$;
 CREATE INDEX IF NOT EXISTS member_links_created_at_idx
   ON public.member_links (created_at DESC);
 
+-- Member documents — PDFs held in the private `member-documents` storage
+-- bucket. storage_path/thumbnail_path are object paths within that bucket, not
+-- URLs: the bucket is private, so the app reads them through short-lived signed
+-- URLs and nothing is ever publicly addressable.
+CREATE TABLE IF NOT EXISTS public.member_documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  storage_path TEXT NOT NULL UNIQUE,
+  thumbnail_path TEXT,
+  file_size BIGINT NOT NULL DEFAULT 0,
+  page_count INTEGER,
+  uploader_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'member_documents_title_length'
+  ) THEN
+    ALTER TABLE public.member_documents
+      ADD CONSTRAINT member_documents_title_length CHECK (char_length(title) BETWEEN 1 AND 200);
+  END IF;
+
+  -- Mirrors the 30 MB bucket limit so an oversized row cannot be recorded even
+  -- if the storage upload were somehow bypassed.
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'member_documents_file_size'
+  ) THEN
+    ALTER TABLE public.member_documents
+      ADD CONSTRAINT member_documents_file_size CHECK (file_size >= 0 AND file_size <= 31457280);
+  END IF;
+END
+$$;
+
+CREATE INDEX IF NOT EXISTS member_documents_created_at_idx
+  ON public.member_documents (created_at DESC);
+
 -- YouTube OAuth token cache — service-role only, no RLS policies.
 CREATE TABLE IF NOT EXISTS public.youtube_tokens (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -167,6 +206,7 @@ ALTER TABLE public.conversation_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.invitations           ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.member_videos         ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.member_links          ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.member_documents      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.youtube_tokens        ENABLE ROW LEVEL SECURITY;
 
 
@@ -345,7 +385,73 @@ CREATE POLICY "Uploader or admin can delete member links"
   ON public.member_links FOR DELETE TO authenticated
   USING (auth.uid() = uploader_id OR public.has_role(auth.uid(), 'admin'));
 
+-- member_documents
+DROP POLICY IF EXISTS "Authenticated can view member documents" ON public.member_documents;
+CREATE POLICY "Authenticated can view member documents"
+  ON public.member_documents FOR SELECT TO authenticated USING (true);
+
+DROP POLICY IF EXISTS "Authenticated can insert own member documents" ON public.member_documents;
+CREATE POLICY "Authenticated can insert own member documents"
+  ON public.member_documents FOR INSERT TO authenticated WITH CHECK (auth.uid() = uploader_id);
+
+DROP POLICY IF EXISTS "Uploader or admin can update member documents" ON public.member_documents;
+CREATE POLICY "Uploader or admin can update member documents"
+  ON public.member_documents FOR UPDATE TO authenticated
+  USING (auth.uid() = uploader_id OR public.has_role(auth.uid(), 'admin'));
+
+DROP POLICY IF EXISTS "Uploader or admin can delete member documents" ON public.member_documents;
+CREATE POLICY "Uploader or admin can delete member documents"
+  ON public.member_documents FOR DELETE TO authenticated
+  USING (auth.uid() = uploader_id OR public.has_role(auth.uid(), 'admin'));
+
 -- youtube_tokens: intentionally has no policies — service role access only.
+
+
+-- -----------------------------------------------------------------------------
+-- Storage: private bucket for member PDFs
+-- -----------------------------------------------------------------------------
+
+-- public = false, so objects are never served anonymously; the app requests
+-- short-lived signed URLs instead. The 30 MB limit is enforced by storage
+-- itself, which is what makes it authoritative rather than a UI convention.
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+  'member-documents',
+  'member-documents',
+  false,
+  31457280,
+  ARRAY['application/pdf', 'image/png', 'image/jpeg']
+)
+ON CONFLICT (id) DO UPDATE
+  SET public = EXCLUDED.public,
+      file_size_limit = EXCLUDED.file_size_limit,
+      allowed_mime_types = EXCLUDED.allowed_mime_types;
+
+-- Any signed-in member may read; uploads are confined to a folder named after
+-- the uploader's own id, so nobody can write into someone else's space.
+DROP POLICY IF EXISTS "Members can read member documents" ON storage.objects;
+CREATE POLICY "Members can read member documents"
+  ON storage.objects FOR SELECT TO authenticated
+  USING (bucket_id = 'member-documents');
+
+DROP POLICY IF EXISTS "Members can upload member documents" ON storage.objects;
+CREATE POLICY "Members can upload member documents"
+  ON storage.objects FOR INSERT TO authenticated
+  WITH CHECK (
+    bucket_id = 'member-documents'
+    AND (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+DROP POLICY IF EXISTS "Owner or admin can delete member documents" ON storage.objects;
+CREATE POLICY "Owner or admin can delete member documents"
+  ON storage.objects FOR DELETE TO authenticated
+  USING (
+    bucket_id = 'member-documents'
+    AND (
+      (storage.foldername(name))[1] = auth.uid()::text
+      OR public.has_role(auth.uid(), 'admin')
+    )
+  );
 
 
 -- -----------------------------------------------------------------------------

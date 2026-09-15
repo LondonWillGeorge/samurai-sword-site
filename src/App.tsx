@@ -27,6 +27,9 @@ import ChangePassword from "./pages/ChangePassword";
 import SetPassword from "./pages/SetPassword";
 import MemberVideos from "./pages/MemberVideos";
 import MemberLinks from "./pages/MemberLinks";
+import MemberDocuments from "./pages/MemberDocuments";
+import DocumentViewer from "./pages/DocumentViewer";
+import EditableArticles from "./pages/EditableArticles";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -62,6 +65,9 @@ const App = () => (
             <Route path="/set-password" element={<SetPassword />} />
             <Route path="/member-videos" element={<MemberVideos />} />
             <Route path="/member-links" element={<MemberLinks />} />
+            <Route path="/documents" element={<MemberDocuments />} />
+            <Route path="/documents/:id" element={<DocumentViewer />} />
+            <Route path="/articles" element={<EditableArticles />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
