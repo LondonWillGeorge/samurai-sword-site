@@ -84,6 +84,23 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Failed to generate invite link' }), { status: 500, headers: corsHeaders })
     }
 
+    // Flag the account so the app forces this member through /set-password
+    // before they can reach the members' area. The invite link signs them in
+    // on click, so without this they would never be asked for a password.
+    // Cleared by the Set Password page on submit.
+    const invitedUserId = linkData?.user?.id
+    if (invitedUserId) {
+      const { error: flagError } = await adminClient.auth.admin.updateUserById(invitedUserId, {
+        user_metadata: {
+          ...(linkData?.user?.user_metadata ?? {}),
+          must_set_password: true,
+        },
+      })
+      if (flagError) {
+        console.error('Failed to flag invited user for password setup:', flagError)
+      }
+    }
+
     // Build link URL on our own domain using hashed_token (avoids supabase.co redirect)
     const inviteLink = `${redirectTo}?token_hash=${hashedToken}&type=${linkType}`
 

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -8,11 +9,17 @@ interface AuthContextType {
   session: Session | null;
   isAdmin: boolean;
   loading: boolean;
+  mustSetPassword: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// supabase-js persists the session under `sb-<project-ref>-auth-token`.
+// Derived from the configured URL so it stays correct if the project changes.
+const SUPABASE_PROJECT_REF =
+  import.meta.env.VITE_SUPABASE_URL?.match(/https:\/\/([^.]+)\./)?.[1] ?? '';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -46,6 +53,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Invited members are signed in by the invite link itself, so the flag on
+  // their account — set by the send-invite function — is what forces them
+  // through /set-password before they can use anything else. Existing members
+  // have no such flag and are unaffected.
+  const mustSetPassword = user?.user_metadata?.must_set_password === true;
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (loading || !user || !mustSetPassword) return;
+    if (location.pathname === '/set-password') return;
+    navigate('/set-password', { replace: true });
+  }, [user, loading, mustSetPassword, location.pathname, navigate]);
 
   const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000; // Test locally at 10 seconds: 10 * 1000;
   // Inactivity timeout of 30 minutes, event listeners set in this script run client-side in browser.
