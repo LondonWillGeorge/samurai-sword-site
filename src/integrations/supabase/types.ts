@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      member_links: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          kind: string
+          thumbnail_url: string | null
+          title: string
+          uploader_id: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          kind?: string
+          thumbnail_url?: string | null
+          title: string
+          uploader_id: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          kind?: string
+          thumbnail_url?: string | null
+          title?: string
+          uploader_id?: string
+          url?: string
+        }
+        Relationships: []
+      }
       invitations: {
         Row: {
           created_at: string
@@ -43,6 +76,7 @@ export type Database = {
       }
       conversation_titles: {
         Row: {
+          archived: boolean
           created_at: string
           id: string
           title: string
@@ -50,6 +84,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          archived?: boolean
           created_at?: string
           id?: string
           title: string
@@ -57,11 +92,39 @@ export type Database = {
           user_id: string
         }
         Update: {
+          archived?: boolean
           created_at?: string
           id?: string
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      member_videos: {
+        Row: {
+          created_at: string
+          id: string
+          thumbnail_url: string | null
+          title: string
+          uploader_id: string
+          youtube_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          thumbnail_url?: string | null
+          title: string
+          uploader_id: string
+          youtube_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          thumbnail_url?: string | null
+          title?: string
+          uploader_id?: string
+          youtube_id?: string
         }
         Relationships: []
       }

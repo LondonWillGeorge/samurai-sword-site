@@ -36,6 +36,8 @@ const ThreadDetail = () => {
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [pendingThreadDelete, setPendingThreadDelete] = useState(false);
+  const [isDeletingThread, setIsDeletingThread] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageError, setImageError] = useState('');
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
@@ -174,7 +176,44 @@ const ThreadDetail = () => {
     setPendingDeleteId(null);
   };
 
+  const handleDeleteThread = async () => {
+    if (!id) return;
+    setIsDeletingThread(true);
+    // Messages are removed by the thread_id foreign key's ON DELETE CASCADE.
+    const { error, count } = await supabase
+      .from('conversation_titles')
+      .delete({ count: 'exact' })
+      .eq('id', id);
+    setIsDeletingThread(false);
+    setPendingThreadDelete(false);
+
+    if (error) {
+      toast({ title: 'Could not delete conversation', description: error.message, variant: 'destructive' });
+      return;
+    }
+    // RLS returns success with zero rows affected when the policy blocks the
+    // delete — e.g. someone replied in another tab a moment ago.
+    if (!count) {
+      toast({
+        title: 'Could not delete conversation',
+        description: 'Someone has replied, so this conversation can no longer be deleted.',
+        variant: 'destructive',
+      });
+      fetchMessages();
+      return;
+    }
+    toast({ title: 'Conversation deleted' });
+    navigate('/messages');
+  };
+
   if (loading || !user) return null;
+
+  // Once anyone else has posted, the thread belongs to the conversation rather
+  // than its author — from then on only individual authors can delete their own
+  // messages. Mirrors the "Owner or admin can delete thread" RLS policy.
+  const othersHaveReplied = messages.some(m => m.user_id !== user.id);
+  const isThreadOwner = !!thread && thread.user_id === user.id;
+  const canDeleteThread = !!thread && (isAdmin || (isThreadOwner && !othersHaveReplied));
 
   return (
     <div className="min-h-screen bg-background">
@@ -186,7 +225,27 @@ const ThreadDetail = () => {
           </Link>
 
           {thread && (
-            <h1 className="font-heading text-2xl tracking-wider mb-8">{thread.title}</h1>
+            <div className="flex items-start justify-between gap-4 mb-8">
+              <h1 className="font-heading text-2xl tracking-wider">{thread.title}</h1>
+              {canDeleteThread && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPendingThreadDelete(true)}
+                  className="shrink-0 text-muted-foreground hover:text-destructive"
+                >
+                  <Trash2 size={14} className="mr-1" />
+                  Delete conversation
+                </Button>
+              )}
+            </div>
+          )}
+
+          {isThreadOwner && othersHaveReplied && !isAdmin && (
+            <p className="text-xs text-muted-foreground mb-6 -mt-4">
+              Others have replied, so this conversation can no longer be deleted. You can still
+              delete your own messages.
+            </p>
           )}
 
           {/* Messages */}
@@ -282,6 +341,24 @@ const ThreadDetail = () => {
           <AlertDialogFooter>
             <AlertDialogCancel>No</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteMessage}>Yes</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={pendingThreadDelete} onOpenChange={(open) => { if (!open) setPendingThreadDelete(false); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this conversation?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure? This deletes &ldquo;{thread?.title}&rdquo; and every message in it,
+              permanently. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeletingThread}>No</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteThread} disabled={isDeletingThread}>
+              {isDeletingThread ? 'Deleting...' : 'Yes, delete'}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
