@@ -26,7 +26,10 @@ Deno.serve(async (req) => {
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const adminClient = createClient(supabaseUrl, serviceRoleKey)
 
-    const appUrl = 'https://id-preview--17849ad1-fdcc-465b-a06f-e31173f58f90.lovable.app'
+    // Set APP_URL as a function secret to point reset links elsewhere.
+    // Whatever this resolves to must be allow-listed under
+    // Authentication -> URL Configuration -> Redirect URLs in the dashboard.
+    const appUrl = Deno.env.get('APP_URL') ?? 'https://tenshinwarrior.com'
     const { data, error } = await adminClient.auth.admin.generateLink({
       type: 'recovery',
       email,
