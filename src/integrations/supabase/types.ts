@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      member_documents: {
+        Row: {
+          created_at: string
+          description: string
+          file_size: number
+          id: string
+          page_count: number | null
+          storage_path: string
+          thumbnail_path: string | null
+          title: string
+          uploader_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          file_size?: number
+          id?: string
+          page_count?: number | null
+          storage_path: string
+          thumbnail_path?: string | null
+          title: string
+          uploader_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          file_size?: number
+          id?: string
+          page_count?: number | null
+          storage_path?: string
+          thumbnail_path?: string | null
+          title?: string
+          uploader_id?: string
+        }
+        Relationships: []
+      }
       member_links: {
         Row: {
           created_at: string

@@ -302,6 +302,18 @@ export const Navigation = () => {
                       >
                         External Videos &amp; Links
                       </Link>
+                      <Link
+                        to="/documents"
+                        className="block px-4 py-2 text-sm tracking-wider text-muted-foreground hover:text-primary hover:bg-secondary transition-colors"
+                      >
+                        PDF Documents
+                      </Link>
+                      <Link
+                        to="/articles"
+                        className="block px-4 py-2 text-sm tracking-wider text-muted-foreground hover:text-primary hover:bg-secondary transition-colors"
+                      >
+                        Editable Articles
+                      </Link>
                     </div>
                   )}
                 </div>
@@ -369,7 +381,7 @@ export const Navigation = () => {
                     />
                   </button>
                 </div>
-                <div className={`overflow-hidden transition-all duration-200 ${openSubmenu === 'Members' ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div className={`overflow-hidden transition-all duration-200 ${openSubmenu === 'Members' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                   <div className="pl-4 border-l border-border ml-2">
                     <Link
                       to="/messages"
@@ -391,6 +403,20 @@ export const Navigation = () => {
                       className="block py-2 text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors"
                     >
                       Videos &amp; Links
+                    </Link>
+                    <Link
+                      to="/documents"
+                      onClick={() => { setIsOpen(false); setOpenSubmenu(null); }}
+                      className="block py-2 text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      PDF Documents
+                    </Link>
+                    <Link
+                      to="/articles"
+                      onClick={() => { setIsOpen(false); setOpenSubmenu(null); }}
+                      className="block py-2 text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Editable Articles
                     </Link>
                   </div>
                 </div>
