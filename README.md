@@ -1,9 +1,20 @@
+# Tenshin Warrior
+
+Website for Tenshin Warrior — traditional Japanese martial arts (Iaido, Iaijutsu, Kobudo)
+in the Croydon and Sussex areas.
+
+Originally scaffolded with Lovable; development moved to Claude Code, and the site now runs
+on its own Supabase project with no remaining Lovable dependency.
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/17849ad1-fdcc-465b-a06f-e31173f58f90
+- **Stack**: Vite, React, TypeScript, Tailwind CSS, shadcn/ui
+- **Backend**: Supabase (Postgres + Auth + Edge Functions), project `vnuxihmrzwiypoatoziz`
+- **Images**: Cloudinary (message attachments)
+- **Hosting**: Netlify
 
-But now I switched development to using Claude Code, more powerful than Lovable, quick to implement new features.
+The database schema lives in `supabase/schema.sql` and is idempotent — edit that file and
+re-run it whenever the schema changes. See the comment block at the top of it for how.
 
 
 ## Here is Claude Code's plan for the user video upload functionality inside the Members (logged in) area.
@@ -338,73 +349,38 @@ Plan: Member Videos Upload Page
 
 
 
-## How can I edit this code?
+## Working on this project
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/17849ad1-fdcc-465b-a06f-e31173f58f90) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use Claude Code inside VS Code IDE!**
-
-Below are Lovable auto instructions, if someone actually wants to copy this, suggest being ready to use AI to solve installation issues.
-As with all software projects, assume you will get **unexpected problems**.
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Requires Node.js & npm ([install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)).
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Install dependencies
+npm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the dev server (http://localhost:8080)
 npm run dev
+
+# Type-check, lint and build
+npx tsc -p tsconfig.app.json --noEmit
+npm run lint
+npm run build
 ```
 
-**Edit a file directly in GitHub**
+Local dev and the live site share **one** Supabase project, so schema changes and data
+written while developing are production changes. There is no separate dev database.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Supabase
 
-**Use GitHub Codespaces**
+```sh
+# Deploy an Edge Function
+supabase functions deploy <name>
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Schema changes: edit `supabase/schema.sql`, then run it against the database via the
+[SQL editor](https://supabase.com/dashboard/project/vnuxihmrzwiypoatoziz/sql) or psql.
 
-## What technologies are used for this project?
+## Deployment
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/17849ad1-fdcc-465b-a06f-e31173f58f90) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Pushes to `development` build and deploy automatically. Environment variables
+(`VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_CLOUDINARY_*`) are configured
+in the Netlify dashboard, not in this repo.

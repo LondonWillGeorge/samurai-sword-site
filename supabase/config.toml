@@ -1,4 +1,4 @@
-project_id = "htzowkhdorjlhofonuvu"
+project_id = "vnuxihmrzwiypoatoziz"
 
 [functions.send-contact-email]
 verify_jwt = false
@@ -13,4 +13,7 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.upload-to-youtube]
+verify_jwt = false
+
+[functions.link-preview]
 verify_jwt = false

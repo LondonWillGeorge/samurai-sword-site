@@ -28,6 +28,8 @@ dist-ssr
 
 lovable_data_migration/
 *.sql
+# ...except the committed schema source of truth
+!supabase/schema.sql
 
 # Supabase CLI local state
 supabase/.temp/

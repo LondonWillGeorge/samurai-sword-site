@@ -24,7 +24,9 @@ import ThreadDetail from "./pages/ThreadDetail";
 import ResetPassword from "./pages/ResetPassword";
 import AcceptInvite from "./pages/AcceptInvite";
 import ChangePassword from "./pages/ChangePassword";
+import SetPassword from "./pages/SetPassword";
 import MemberVideos from "./pages/MemberVideos";
+import MemberLinks from "./pages/MemberLinks";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -57,7 +59,9 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/accept-invite" element={<AcceptInvite />} />
             <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/set-password" element={<SetPassword />} />
             <Route path="/member-videos" element={<MemberVideos />} />
+            <Route path="/member-links" element={<MemberLinks />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

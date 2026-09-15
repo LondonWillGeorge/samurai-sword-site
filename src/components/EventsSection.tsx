@@ -14,16 +14,16 @@ const events: Event[] = [
   {
     title: 'Yodokan Summer Combined Training Seminar',
     date: (
-      <>Saturday 29th August 2026 - <strong>Arrive 9.30AM</strong>, Finish 4PM - pub optional</>
+      <>Saturday 29th August 2026 - 9.30AM - 4PM - pub optional</>
     ),
     description: (
-      <>A day of varied Budo activities, try out new forms of martial arts in a friendly and supportive environment. Open to all current students.
+      <>A day of varied Budo activities, trying out new forms of martial arts in a friendly and supportive environment. Was open to all current students.
       <br/>
-      <span className="text-accent font-medium">Click here for the full schedule!</span>
+      <span className="text-accent font-medium">Click here to see what took place</span>
       </>
     ),
     location: 'Yabane Yodokan, Emmanuel United Reform Church, West Wickham, BR4 9JS',
-    featured: true,
+    featured: false,
     link: '/events/seminar2026',
   },
   {

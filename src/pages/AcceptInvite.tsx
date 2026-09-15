@@ -31,12 +31,13 @@ const AcceptInvite = () => {
         .then(({ data, error }) => {
           if (error) {
             setErrorMessage(error.message);
-          } else if (type === 'magiclink') {
-            // Already a confirmed member — go straight to messages
-            navigate('/messages');
           } else {
+            // Both invite and magiclink arrive here signed in. Either way the
+            // member must choose a password before going any further, so hand
+            // off to /set-password rather than into the members' area.
             setEmail(data.user?.email || '');
             setIsValid(true);
+            navigate('/set-password', { replace: true });
           }
         });
       return;
