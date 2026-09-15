@@ -102,12 +102,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setIsAdmin(false);
+    // A stale or server-revoked session makes the global sign-out fail. If that
+    // rejection propagated, the stored token would never be cleared and the user
+    // would be stuck permanently "logged in" with no way out. Always fall back
+    // to a local sign-out, which just drops the token from storage.
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    } catch (err) {
+      console.error('Global sign out failed, clearing local session:', err);
+      try {
+        await supabase.auth.signOut({ scope: 'local' });
+      } catch {
+        // Last resort: drop the persisted token by hand so a bad session can
+        // never trap someone in a logged-in state.
+        localStorage.removeItem(`sb-${SUPABASE_PROJECT_REF}-auth-token`);
+      }
+    } finally {
+      setSession(null);
+      setUser(null);
+      setIsAdmin(false);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, isAdmin, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, session, isAdmin, loading, mustSetPassword, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

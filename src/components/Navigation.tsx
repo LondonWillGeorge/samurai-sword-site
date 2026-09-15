@@ -47,9 +47,12 @@ export const Navigation = () => {
     setIsOpen(false);
     try {
       await signOut();
-      navigate('/');
     } catch (err) {
+      // signOut already clears local state on failure; never leave the user
+      // stranded on a members-only page just because the server call failed.
       console.error('Sign out failed:', err);
+    } finally {
+      navigate('/');
     }
   };
 
