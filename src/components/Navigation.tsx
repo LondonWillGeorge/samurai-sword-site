@@ -293,6 +293,12 @@ export const Navigation = () => {
                       >
                         Member Videos
                       </Link>
+                      <Link
+                        to="/member-links"
+                        className="block px-4 py-2 text-sm tracking-wider text-muted-foreground hover:text-primary hover:bg-secondary transition-colors"
+                      >
+                        External Videos &amp; Links
+                      </Link>
                     </div>
                   )}
                 </div>
@@ -375,6 +381,13 @@ export const Navigation = () => {
                       className="block py-2 text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors"
                     >
                       Member Videos
+                    </Link>
+                    <Link
+                      to="/member-links"
+                      onClick={() => { setIsOpen(false); setOpenSubmenu(null); }}
+                      className="block py-2 text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Videos &amp; Links
                     </Link>
                   </div>
                 </div>
