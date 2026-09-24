@@ -256,6 +256,13 @@ export type Database = {
         }
         Returns: boolean
       }
+      list_registered_emails: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          email: string
+          disabled_until: string | null
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "user"
