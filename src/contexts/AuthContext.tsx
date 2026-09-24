@@ -31,6 +31,11 @@ const INACTIVITY_CHECK_INTERVAL_MS = 2 * 1000;
 
 const LAST_ACTIVITY_KEY = 'last-activity-at';
 
+// How often an open page asks the server whether its session still exists.
+// Banning a user ends their sessions (see end_sessions_on_ban in schema.sql),
+// and this is what signs their browser out without waiting for token expiry.
+const SESSION_CHECK_INTERVAL_MS = 60 * 1000;
+
 const readLastActivity = (): number | null => {
   try {
     const value = Number(localStorage.getItem(LAST_ACTIVITY_KEY));
@@ -108,6 +113,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (!error) markActivity();
+    // Members see bans as "disabled" accounts; Supabase's own wording is "User is banned".
+    if (error?.code === 'user_banned') return { error: new Error('User is disabled') };
     return { error: error as Error | null };
   };
 
@@ -178,6 +185,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       clearInterval(interval);
       events.forEach(e => window.removeEventListener(e, onActivity));
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [user]);
+
+  // getUser() asks the server rather than trusting the stored token. If the
+  // session has been ended server-side (e.g. the user was banned), supabase-js
+  // drops the local session and fires SIGNED_OUT, which clears `user` above.
+  useEffect(() => {
+    if (!user) return;
+
+    const checkSession = () => { supabase.auth.getUser(); };
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') checkSession();
+    };
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    const interval = setInterval(checkSession, SESSION_CHECK_INTERVAL_MS);
+    // A restored session is trusted from storage until its token expires, so
+    // check on load too — otherwise a page refresh wouldn't catch a ban.
+    checkSession();
+
+    return () => {
+      clearInterval(interval);
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [user]);
