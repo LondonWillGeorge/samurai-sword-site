@@ -9,8 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { MessageSquarePlus, Users, LogOut, KeyRound, Archive, ArchiveRestore } from 'lucide-react';
+import { MessageSquarePlus, Users, LogOut, KeyRound, Archive, ArchiveRestore, Mail } from 'lucide-react';
 import { InviteDialog } from '@/components/InviteDialog';
+import { RegisteredEmailsDialog } from '@/components/RegisteredEmailsDialog';
 
 interface Thread {
   id: string;
@@ -28,6 +29,7 @@ const Messages = () => {
   const [newFirstMessage, setNewFirstMessage] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
+  const [showRegistered, setShowRegistered] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -162,6 +164,11 @@ const Messages = () => {
                   <Users size={16} className="mr-1" /> Invite
                 </Button>
               )}
+              {isAdmin && (
+                <Button variant="outline" size="sm" onClick={() => setShowRegistered(true)}>
+                  <Mail size={16} className="mr-1" /> Registered Emails
+                </Button>
+              )}
               <Button variant="outline" size="sm" onClick={handleSignOut}>
                 <LogOut size={16} className="mr-1" /> Sign Out
               </Button>
@@ -228,6 +235,7 @@ const Messages = () => {
       </main>
       <Footer />
       <InviteDialog open={showInvite} onOpenChange={setShowInvite} />
+      <RegisteredEmailsDialog open={showRegistered} onOpenChange={setShowRegistered} />
     </div>
   );
 };

@@ -28,8 +28,9 @@ dist-ssr
 
 lovable_data_migration/
 *.sql
-# ...except the committed schema source of truth
+# ...except the committed schema source of truth and the small migration files that dont add much space to the repo.
 !supabase/schema.sql
+!supabase/migrations/*.sql
 
 # Supabase CLI local state
 supabase/.temp/

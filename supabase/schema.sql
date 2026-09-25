@@ -228,6 +228,36 @@ AS $$
   )
 $$;
 
+-- Emails of members who have signed in at least once, for admins only.
+-- Profiles can't answer this: sending an invite creates the auth user (and so
+-- its profile) before the invitee has accepted, so only auth.users knows who
+-- has actually signed in. disabled_until is the ban end for currently banned
+-- members (NULL otherwise); they are listed after everyone else.
+-- A function's result columns can't be changed in place, so drop it first.
+DROP FUNCTION IF EXISTS public.list_registered_emails();
+CREATE FUNCTION public.list_registered_emails()
+RETURNS TABLE (email TEXT, disabled_until TIMESTAMPTZ)
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF NOT public.has_role(auth.uid(), 'admin') THEN
+    RAISE EXCEPTION 'Only admins can list registered emails' USING ERRCODE = '42501';
+  END IF;
+  RETURN QUERY
+    SELECT
+      u.email::TEXT,
+      CASE WHEN u.banned_until > now() THEN u.banned_until END
+    FROM auth.users u
+    WHERE u.last_sign_in_at IS NOT NULL
+    ORDER BY (u.banned_until > now()) IS TRUE, lower(u.email);
+END;
+$$;
+REVOKE ALL ON FUNCTION public.list_registered_emails() FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.list_registered_emails() TO authenticated;
+
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -251,6 +281,25 @@ BEGIN
   IF NEW.email IN ('will_croxford@hotmail.com', 'tenshinryu@hotmail.co.uk') THEN
     INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'admin')
     ON CONFLICT (user_id, role) DO NOTHING;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+-- Banning a user (setting auth.users.banned_until in the future) already stops
+-- new sign-ins and token refreshes, but leaves existing sessions alive until
+-- their access token expires. Ending the sessions here makes a ban immediate:
+-- refresh tokens go with them (FK cascade), and the app's periodic session
+-- check signs the browser out. Unbanning needs nothing — they just sign in.
+CREATE OR REPLACE FUNCTION public.end_sessions_on_ban()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF NEW.banned_until IS NOT NULL AND NEW.banned_until > now() THEN
+    DELETE FROM auth.sessions WHERE user_id = NEW.id;
   END IF;
   RETURN NEW;
 END;
@@ -467,6 +516,13 @@ DROP TRIGGER IF EXISTS on_auth_user_admin_check ON auth.users;
 CREATE TRIGGER on_auth_user_admin_check
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_admin_assignment();
+
+DROP TRIGGER IF EXISTS on_auth_user_banned ON auth.users;
+CREATE TRIGGER on_auth_user_banned
+  AFTER UPDATE OF banned_until ON auth.users
+  FOR EACH ROW
+  WHEN (NEW.banned_until IS DISTINCT FROM OLD.banned_until)
+  EXECUTE FUNCTION public.end_sessions_on_ban();
 
 DROP TRIGGER IF EXISTS update_profiles_updated_at ON public.profiles;
 CREATE TRIGGER update_profiles_updated_at
