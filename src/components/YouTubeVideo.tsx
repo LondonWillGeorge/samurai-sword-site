@@ -64,25 +64,28 @@ export const YouTubeVideo = ({
   const [availableSpeeds, setAvailableSpeeds] = useState<number[]>([0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]);
   const playerRef = useRef<string>(`player-${videoId}-${Math.random().toString(36).substr(2, 9)}`);
 
-  // Use stored thumbnail from upload response if available, otherwise fall back to
-  // maxresdefault.jpg (best quality, but missing for many videos) → hq1.jpg (a real frame at 480x360).
-  const thumbnailUrl = thumbnailOverride ?? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  const fallbackThumbnail = `https://img.youtube.com/vi/${videoId}/hq1.jpg`;
+  // Best available thumbnail first: maxresdefault (1280x720, missing for many videos)
+  // → sddefault (640x480) → hq1 (a real frame at 480x360, always present).
+  const thumbnailCandidates = [
+    ...(thumbnailOverride ? [thumbnailOverride] : []),
+    `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+    `https://img.youtube.com/vi/${videoId}/sddefault.jpg`,
+    `https://img.youtube.com/vi/${videoId}/hq1.jpg`,
+  ];
+  const [thumbnailIndex, setThumbnailIndex] = useState(0);
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
+  const isLastThumbnail = thumbnailIndex === thumbnailCandidates.length - 1;
 
-  const switchToFallbackThumbnail = (img: HTMLImageElement) => {
-    if (img.src === fallbackThumbnail) {
-      setThumbnailLoaded(true);
-      return;
-    }
-    img.src = fallbackThumbnail;
+  const tryNextThumbnail = () => {
+    if (isLastThumbnail) setThumbnailLoaded(true);
+    else setThumbnailIndex(i => i + 1);
   };
 
-  // When a video has no maxresdefault, YouTube serves a 120x90 grey placeholder
-  // image instead of failing, so onError never fires; detect it by its size.
+  // When a size is missing, YouTube serves a 120x90 grey placeholder image
+  // instead of failing, so onError never fires; detect it by its size.
   const handleThumbnailLoad = (img: HTMLImageElement) => {
-    if (img.src !== fallbackThumbnail && img.naturalWidth <= 120) {
-      switchToFallbackThumbnail(img);
+    if (!isLastThumbnail && img.naturalWidth <= 120) {
+      tryNextThumbnail();
       return;
     }
     setThumbnailLoaded(true);
@@ -212,11 +215,11 @@ export const YouTubeVideo = ({
             </div>
           )}
           <img
-            src={thumbnailUrl}
+            src={thumbnailCandidates[thumbnailIndex]}
             alt="Video thumbnail"
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${thumbnailLoaded ? 'opacity-100' : 'opacity-0'}`}
             onLoad={(e) => handleThumbnailLoad(e.currentTarget)}
-            onError={(e) => switchToFallbackThumbnail(e.currentTarget)}
+            onError={tryNextThumbnail}
           />
           <div className={`absolute inset-0 flex items-center justify-center transition-opacity ${thumbnailLoaded ? '' : 'opacity-0'}`}>
             <div className="w-16 h-16 rounded-full bg-primary/90 shadow-lg shadow-black/40 flex items-center justify-center group-hover:bg-primary transition-colors group-hover:scale-110 transform duration-200">

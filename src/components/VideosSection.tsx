@@ -89,7 +89,6 @@ export const VideosSection = () => {
                       <YouTubeVideo
                         key={video.id}
                         videoId={video.youtube_id}
-                        thumbnailOverride={video.thumbnail_url ?? undefined}
                         caption={video.title}
                         lazyLoad
                       />

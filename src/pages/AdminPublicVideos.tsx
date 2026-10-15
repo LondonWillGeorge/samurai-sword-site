@@ -503,7 +503,6 @@ const AdminPublicVideos = () => {
 
                             <YouTubeVideo
                               videoId={video.youtube_id}
-                              thumbnailOverride={video.thumbnail_url ?? undefined}
                               aspectRatio="landscape"
                               showSpeedSlider={false}
                               lazyLoad
