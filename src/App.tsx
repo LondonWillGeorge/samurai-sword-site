@@ -30,6 +30,7 @@ import MemberLinks from "./pages/MemberLinks";
 import MemberDocuments from "./pages/MemberDocuments";
 import DocumentViewer from "./pages/DocumentViewer";
 import EditableArticles from "./pages/EditableArticles";
+import AdminPublicVideos from "./pages/AdminPublicVideos";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -68,6 +69,7 @@ const App = () => (
             <Route path="/documents" element={<MemberDocuments />} />
             <Route path="/documents/:id" element={<DocumentViewer />} />
             <Route path="/articles" element={<EditableArticles />} />
+            <Route path="/admin/public-videos" element={<AdminPublicVideos />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

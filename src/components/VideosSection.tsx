@@ -1,13 +1,56 @@
-import { YouTubeVideo, VideoPlaceholder } from '@/components/YouTubeVideo';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { YouTubeVideo } from '@/components/YouTubeVideo';
+import { VideoSeriesMenu } from '@/components/VideoSeriesMenu';
+import { VideoPagination } from '@/components/VideoPagination';
+import { fetchPublicVideos, pageCount, pageSlice, type PublicVideo, type VideoSeries } from '@/lib/publicVideos';
 
 export const VideosSection = () => {
+  const [series, setSeries] = useState<VideoSeries[]>([]);
+  const [videos, setVideos] = useState<PublicVideo[]>([]);
+  const [status, setStatus] = useState<'loading' | 'error' | 'ready'>('loading');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetchPublicVideos()
+      .then(data => {
+        setSeries(data.series);
+        setVideos(data.videos);
+        setStatus('ready');
+      })
+      .catch(err => {
+        console.error('Failed to load videos:', err);
+        setStatus('error');
+      });
+  }, []);
+
+  const counts = useMemo(() => {
+    const result: Record<string, number> = {};
+    for (const v of videos) result[v.series_id] = (result[v.series_id] ?? 0) + 1;
+    return result;
+  }, [videos]);
+
+  // With no (or an unknown) series in the URL, show the first series.
+  const requestedSeries = searchParams.get('series');
+  const selected = series.find(s => s.id === requestedSeries) ?? series[0] ?? null;
+  const seriesVideos = selected ? videos.filter(v => v.series_id === selected.id) : [];
+  const totalPages = pageCount(seriesVideos.length);
+  const page = Math.min(Math.max(1, Number(searchParams.get('page')) || 1), totalPages);
+
+  const goTo = (seriesId: string, newPage: number) => {
+    setSearchParams(newPage > 1 ? { series: seriesId, page: String(newPage) } : { series: seriesId });
+    gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <section id="videos" className="py-24 bg-secondary">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <p className="text-primary tracking-[0.3em] text-sm mb-4">VIDEOS</p>
           <h2 className="font-heading text-4xl md:text-5xl text-foreground mb-4">
-            Tenshin Ryu In Motion
+            {/* Non-breaking space holds the line while loading, so a linked series doesn't flash the default title */}
+            {status === 'loading' ? '\u00A0' : selected?.title ?? 'Tenshin Ryu In Motion'}
           </h2>
           <p className="text-muted-foreground tracking-wide text-sm mb-4">
             Too fast to follow? Use slider below video to slow down or speed up!
@@ -18,94 +61,50 @@ export const VideosSection = () => {
           <div className="section-divider" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <YouTubeVideo videoId="4LcpgyGT9_Y" caption="Jo (4-foot staff) Kata" />
-          <YouTubeVideo
-            videoId="h17azJvqBpA"
-            caption="Tenshin Ryu Style - First 4 Standing Forms"
-          />
-          <YouTubeVideo videoId="FFOFYasid8M" caption="Tonfa Strikes Kata" />
-        </div>
+        {status === 'loading' && (
+          <p className="text-center text-muted-foreground text-sm tracking-wider">Loading videos...</p>
+        )}
+        {status === 'error' && (
+          <p className="text-center text-muted-foreground text-sm tracking-wider">
+            Sorry, the videos couldn't be loaded. Please try again later.
+          </p>
+        )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <YouTubeVideo videoId="Mj-6IDGRpL8" caption="Nagamaki Demonstration" />
-          <YouTubeVideo
-            videoId="6LfYWCkKG0U"
-            caption="Sword Kata Moves followed by Tameshigiri Cutting"
-          />
-          <YouTubeVideo videoId="Sq0PmR5-2_k" caption="Sai Strikes Kata" />
-        </div>
+        {status === 'ready' && (
+          <div ref={gridRef} className="scroll-mt-24 flex flex-col md:flex-row gap-8 max-w-6xl mx-auto">
+            <VideoSeriesMenu
+              series={series}
+              counts={counts}
+              selectedId={selected?.id ?? null}
+              onSelect={id => goTo(id, 1)}
+            />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <YouTubeVideo
-            videoId="woLf7JKs19E"
-            caption="Sai Deflections/Blocks Kata"
-          />
-          <YouTubeVideo
-            videoId="Jsgz2TaFGeA"
-            caption="Jo (Staff) against Tonfa Demonstration - Robinson senseis"
-          />
-          <YouTubeVideo
-            videoId="28vAKJ18gss"
-            caption="Tonfa Deflections / Blocks Kata - Sensei Luke"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <YouTubeVideo
-            videoId="-aZCYn5ZWig"
-            caption="Jo (Staff) Strikes Kata - Sensei Luke"
-          />
-          <YouTubeVideo
-            videoId="qtt4ICD0Szw"
-            caption="Jutsu Tonfa Kata - Shihan Selvey"
-          />
-          <YouTubeVideo
-            videoId="TQL8X6yp_2Y"
-            caption="Double Cut Tameshigiri (higher dan grade cuts)"
-          />
-          {/* <VideoPlaceholder /> */}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <YouTubeVideo
-            videoId="0_6HvDojnxA"
-            caption="2023 - Team Visit Japan - Wakayama Buddhist Temple"
-          />
-          <YouTubeVideo
-            videoId="RTZ33OvsmAo"
-            caption="1980s? Otani Sensei Teaching Tenshin Ryu Style - 13th Seiza (seated) form - Seppuku"
-          />
-          <YouTubeVideo
-            videoId="_9rTOZ8zbOA"
-            caption="2020 - Shihan Selvey - Japanese Sword advert"
-          />
-          {/* <VideoPlaceholder /> */}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <YouTubeVideo
-            videoId="cJy-R2rj0Mk"
-            caption="1973 Hanshi Box and Shihan Selvey - Judo Demo"
-          />
-          <YouTubeVideo
-            videoId="t3jLTid4QDU"
-            caption="1973 Hanshi Box and Shihan Selvey - Judo Demo - Part 2"
-          />
-          <YouTubeVideo
-            videoId="88sXOW3aw08"
-            caption="Shihan Selvey - 4 Cuts Tameshigiri"
-          />
-        </div>
-
-        {/* UNUSED TEMPLATE (do not nest JSX comments inside!)
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <YouTubeVideo videoId="" caption="" />
-          <YouTubeVideo videoId="" caption="" />
-          <YouTubeVideo videoId="" caption="" />
-          VideoPlaceholder goes here
-        </div>
-        */}
+            <div className="flex-1 min-w-0">
+              {seriesVideos.length === 0 ? (
+                <p className="text-muted-foreground text-sm tracking-wider">No videos in this series yet.</p>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {pageSlice(seriesVideos, page).map(video => (
+                      <YouTubeVideo
+                        key={video.id}
+                        videoId={video.youtube_id}
+                        thumbnailOverride={video.thumbnail_url ?? undefined}
+                        caption={video.title}
+                        lazyLoad
+                      />
+                    ))}
+                  </div>
+                  <VideoPagination
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={p => goTo(selected!.id, p)}
+                  />
+                </>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="text-center mt-12">
           <p className="text-muted-foreground text-sm">

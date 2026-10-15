@@ -8,6 +8,8 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   isAdmin: boolean;
+  // True until the admin role check for the current user has finished
+  adminLoading: boolean;
   loading: boolean;
   mustSetPassword: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -65,6 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [roleCheckedFor, setRoleCheckedFor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const checkAdminRole = async (userId: string) => {
@@ -75,6 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .eq('role', 'admin')
       .maybeSingle();
     setIsAdmin(!!data);
+    setRoleCheckedFor(userId);
   };
 
   useEffect(() => {
@@ -213,7 +217,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, session, isAdmin, loading, mustSetPassword, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, session, isAdmin, adminLoading: !!user && roleCheckedFor !== user.id, loading, mustSetPassword, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
