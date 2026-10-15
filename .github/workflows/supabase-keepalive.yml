@@ -10,12 +10,20 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase auth endpoint
+      - name: Query Supabase database
         run: |
-          http_code=$(curl -s -o /dev/null -w "%{http_code}" \
-            "${{ secrets.SUPABASE_URL }}/auth/v1/settings" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}")
-          echo "Supabase auth endpoint responded with $http_code"
+          # Print the project ref so the log shows which project was pinged
+          # (the full secret is masked, but this substring is not)
+          project_ref=$(echo "${{ secrets.SUPABASE_URL }}" | sed -E 's#https://([^.]+)\..*#\1#')
+          echo "Pinging Supabase project: $project_ref"
+
+          # Hit a real table so Postgres runs a query (counts as database activity).
+          # RLS hides rows from anon, so the expected body is [].
+          http_code=$(curl -s -o response.txt -w "%{http_code}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/profiles?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+          echo "Supabase responded with $http_code: $(cat response.txt)"
           if [ "$http_code" != "200" ]; then
             echo "Unexpected response code from Supabase"
             exit 1

@@ -164,6 +164,68 @@ export type Database = {
         }
         Relationships: []
       }
+      public_video_series: {
+        Row: {
+          created_at: string
+          id: string
+          sort_order: number
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          sort_order?: number
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          sort_order?: number
+          title?: string
+        }
+        Relationships: []
+      }
+      public_videos: {
+        Row: {
+          created_at: string
+          id: string
+          series_id: string
+          sort_order: number
+          thumbnail_url: string | null
+          title: string
+          uploader_id: string | null
+          youtube_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          series_id: string
+          sort_order?: number
+          thumbnail_url?: string | null
+          title: string
+          uploader_id?: string | null
+          youtube_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          series_id?: string
+          sort_order?: number
+          thumbnail_url?: string | null
+          title?: string
+          uploader_id?: string | null
+          youtube_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_videos_series_id_fkey"
+            columns: ["series_id"]
+            isOneToOne: false
+            referencedRelation: "public_video_series"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string

@@ -38,7 +38,7 @@ const navItems = [
 ];
 
 export const Navigation = () => {
-  const { user, signOut } = useAuth();
+  const { user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
@@ -314,6 +314,14 @@ export const Navigation = () => {
                       >
                         Editable Articles
                       </Link>
+                      {isAdmin && (
+                        <Link
+                          to="/admin/public-videos"
+                          className="block px-4 py-2 text-sm tracking-wider text-primary hover:text-primary/80 hover:bg-secondary transition-colors border-t border-border mt-2 pt-3"
+                        >
+                          Public Videos (Admin)
+                        </Link>
+                      )}
                     </div>
                   )}
                 </div>
@@ -418,6 +426,15 @@ export const Navigation = () => {
                     >
                       Editable Articles
                     </Link>
+                    {isAdmin && (
+                      <Link
+                        to="/admin/public-videos"
+                        onClick={() => { setIsOpen(false); setOpenSubmenu(null); }}
+                        className="block py-2 text-sm tracking-wider text-primary hover:text-primary/80 transition-colors"
+                      >
+                        Public Videos (Admin)
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

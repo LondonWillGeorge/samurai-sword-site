@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
+import { uploadToYouTube } from '@/lib/youtube';
 import { FileVideo, Trash2 } from 'lucide-react';
 
 interface MemberVideo {
@@ -89,68 +90,32 @@ const MemberVideos = () => {
       return;
     }
 
+    let uploaded;
     try {
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-to-youtube`);
-      xhr.setRequestHeader('Authorization', `Bearer ${session.access_token}`);
-      xhr.setRequestHeader('X-Video-Title', title.trim());
-      xhr.setRequestHeader('X-Video-Mime-Type', videoFile.type);
-
-      xhr.upload.onprogress = (e) => {
-        if (e.lengthComputable) setUploadProgress(Math.round((e.loaded / e.total) * 100));
-      };
-
-      xhr.onload = async () => {
-        let json: { youtube_id?: string; thumbnail_url?: string; error?: string };
-        try {
-          json = JSON.parse(xhr.responseText);
-        } catch {
-          toast({ title: 'Upload failed', description: 'Unexpected server response.', variant: 'destructive' });
-          setUploadProgress(null);
-          return;
-        }
-
-        if (xhr.status !== 200) {
-          toast({ title: 'Upload failed', description: json.error ?? xhr.statusText, variant: 'destructive' });
-          setUploadProgress(null);
-          return;
-        }
-
-        if (!json.youtube_id) {
-          toast({ title: 'Upload failed', description: 'No video ID returned.', variant: 'destructive' });
-          setUploadProgress(null);
-          return;
-        }
-
-        const { error: insertError } = await supabase.from('member_videos').insert({
-          youtube_id: json.youtube_id,
-          thumbnail_url: json.thumbnail_url ?? null,
-          title: title.trim(),
-          uploader_id: user.id,
-        });
-        if (insertError) {
-          toast({ title: 'Video uploaded to YouTube but failed to save', description: insertError.message, variant: 'destructive' });
-          setUploadProgress(null);
-          return;
-        }
-        toast({ title: 'Video uploaded!', description: `"${title.trim()}" is now live.` });
-        setTitle('');
-        setVideoFile(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-        fetchVideos();
-        setUploadProgress(null);
-      };
-
-      xhr.onerror = () => {
-        toast({ title: 'Network error during upload', variant: 'destructive' });
-        setUploadProgress(null);
-      };
-
-      xhr.send(videoFile);
+      uploaded = await uploadToYouTube(videoFile, title.trim(), session.access_token, setUploadProgress);
     } catch (err) {
-      toast({ title: 'Network error', description: (err as Error).message, variant: 'destructive' });
+      toast({ title: 'Upload failed', description: (err as Error).message, variant: 'destructive' });
       setUploadProgress(null);
+      return;
     }
+
+    const { error: insertError } = await supabase.from('member_videos').insert({
+      youtube_id: uploaded.youtube_id,
+      thumbnail_url: uploaded.thumbnail_url,
+      title: title.trim(),
+      uploader_id: user.id,
+    });
+    if (insertError) {
+      toast({ title: 'Video uploaded to YouTube but failed to save', description: insertError.message, variant: 'destructive' });
+      setUploadProgress(null);
+      return;
+    }
+    toast({ title: 'Video uploaded!', description: `"${title.trim()}" is now live.` });
+    setTitle('');
+    setVideoFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    fetchVideos();
+    setUploadProgress(null);
   };
 
   const handleDelete = async (id: string) => {
@@ -264,7 +229,6 @@ const MemberVideos = () => {
                 </div>
                 <YouTubeVideo
                   videoId={video.youtube_id}
-                  thumbnailOverride={video.thumbnail_url ?? undefined}
                   aspectRatio="landscape"
                   lazyLoad
                   showSpeedSlider={true}

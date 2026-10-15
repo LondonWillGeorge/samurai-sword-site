@@ -15,6 +15,7 @@ declare global {
           playerVars?: Record<string, number | string>;
           events?: {
             onReady?: (event: { target: YTPlayer }) => void;
+            onStateChange?: (event: { data: number }) => void;
           };
         }
       ) => YTPlayer;
@@ -55,15 +56,40 @@ export const YouTubeVideo = ({
 }: YouTubeVideoProps) => {
   const [player, setPlayer] = useState<YTPlayer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  // Caption shows while the player is idle, paused or ended, and hides during playback.
+  // Lazy-loaded players autoplay once clicked, so they start hidden.
+  const [showPlayerCaption, setShowPlayerCaption] = useState(!lazyLoad);
   const [isActivated, setIsActivated] = useState(!lazyLoad);
   const [speed, setSpeed] = useState(1);
   const [availableSpeeds, setAvailableSpeeds] = useState<number[]>([0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]);
   const playerRef = useRef<string>(`player-${videoId}-${Math.random().toString(36).substr(2, 9)}`);
 
-  // Use stored thumbnail from upload response if available, otherwise fall back to
-  // maxresdefault.jpg (best quality when set in YouTube Studio) → 1.jpg (always a real frame).
-  const thumbnailUrl = thumbnailOverride ?? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  const fallbackThumbnail = `https://img.youtube.com/vi/${videoId}/1.jpg`;
+  // Best available thumbnail first: maxresdefault (1280x720, missing for many videos)
+  // → sddefault (640x480) → hq1 (a real frame at 480x360, always present).
+  const thumbnailCandidates = [
+    ...(thumbnailOverride ? [thumbnailOverride] : []),
+    `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+    `https://img.youtube.com/vi/${videoId}/sddefault.jpg`,
+    `https://img.youtube.com/vi/${videoId}/hq1.jpg`,
+  ];
+  const [thumbnailIndex, setThumbnailIndex] = useState(0);
+  const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
+  const isLastThumbnail = thumbnailIndex === thumbnailCandidates.length - 1;
+
+  const tryNextThumbnail = () => {
+    if (isLastThumbnail) setThumbnailLoaded(true);
+    else setThumbnailIndex(i => i + 1);
+  };
+
+  // When a size is missing, YouTube serves a 120x90 grey placeholder image
+  // instead of failing, so onError never fires; detect it by its size.
+  const handleThumbnailLoad = (img: HTMLImageElement) => {
+    if (!isLastThumbnail && img.naturalWidth <= 120) {
+      tryNextThumbnail();
+      return;
+    }
+    setThumbnailLoaded(true);
+  };
 
   useEffect(() => {
     if (!isActivated) return;
@@ -88,6 +114,11 @@ export const YouTubeVideo = ({
               if (rates && rates.length > 0) {
                 setAvailableSpeeds(rates);
               }
+            },
+            // YT.PlayerState: -1 unstarted, 0 ended, 1 playing, 2 paused, 3 buffering, 5 cued
+            onStateChange: ({ data }) => {
+              if (data === 1 || data === 3) setShowPlayerCaption(false);
+              else if (data === 0 || data === 2 || data === 5) setShowPlayerCaption(true);
             },
           },
         });
@@ -154,6 +185,22 @@ export const YouTubeVideo = ({
     }
   };
 
+  // Gradient only behind the text, so the rest of the image stays at full brightness
+  const captionText = (
+    <p className="text-accent text-base font-extrabold tracking-wider [text-shadow:0_1px_3px_rgb(0_0_0_/_0.8)]">{caption}</p>
+  );
+  const captionOverlay = (
+    <>
+      {/* Mirror of the bottom shading; the hidden copy of the caption keeps both the same height */}
+      <div aria-hidden className="absolute top-0 left-0 right-0 px-4 pt-4 pb-12 bg-gradient-to-b from-black/80 via-black/50 to-transparent pointer-events-none">
+        <div className="invisible">{captionText}</div>
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 pt-12 bg-gradient-to-t from-black/80 via-black/50 to-transparent pointer-events-none">
+        {captionText}
+      </div>
+    </>
+  );
+
   // Thumbnail preview for lazy loading
   if (!isActivated) {
     return (
@@ -162,29 +209,26 @@ export const YouTubeVideo = ({
           className={`group relative overflow-hidden bg-card ${getAspectRatioClass()} cursor-pointer`}
           onClick={handleActivate}
         >
-          <img 
-            src={thumbnailUrl}
+          {!thumbnailLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-card">
+              <div className="animate-pulse text-muted-foreground text-sm">Loading...</div>
+            </div>
+          )}
+          <img
+            src={thumbnailCandidates[thumbnailIndex]}
             alt="Video thumbnail"
-            className="absolute inset-0 w-full h-full object-cover"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = fallbackThumbnail;
-            }}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${thumbnailLoaded ? 'opacity-100' : 'opacity-0'}`}
+            onLoad={(e) => handleThumbnailLoad(e.currentTarget)}
+            onError={tryNextThumbnail}
           />
-          <div className="absolute inset-0 bg-background/30 flex items-center justify-center group-hover:bg-background/20 transition-colors">
-            <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center group-hover:bg-primary transition-colors group-hover:scale-110 transform duration-200">
+          <div className={`absolute inset-0 flex items-center justify-center transition-opacity ${thumbnailLoaded ? '' : 'opacity-0'}`}>
+            <div className="w-16 h-16 rounded-full bg-primary/90 shadow-lg shadow-black/40 flex items-center justify-center group-hover:bg-primary transition-colors group-hover:scale-110 transform duration-200">
               <Play className="w-8 h-8 text-primary-foreground ml-1" fill="currentColor" />
             </div>
           </div>
-          {caption && (
-            <>
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none">
-                <p className="text-foreground text-sm tracking-wider">{caption}</p>
-              </div>
-            </>
-          )}
+          {caption && thumbnailLoaded && captionOverlay}
         </div>
-        
+
         {showSpeedSlider && (
           <div className="mt-4 px-2 opacity-50">
             <div className="flex items-center gap-3">
@@ -226,14 +270,7 @@ export const YouTubeVideo = ({
         ) : (
           <div id={playerRef.current} className="w-full h-full" />
         )}
-        {caption && (
-          <>
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none">
-              <p className="text-foreground text-sm tracking-wider">{caption}</p>
-            </div>
-          </>
-        )}
+        {caption && !isLoading && showPlayerCaption && captionOverlay}
       </div>
       
       {showSpeedSlider && (
