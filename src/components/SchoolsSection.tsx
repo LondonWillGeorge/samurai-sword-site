@@ -27,15 +27,21 @@ const schools = [
   },
   {
     name: 'Fudoshin Yodokan',
-    instructor: 'Sensei Demetri 3rd Dan',
+    instructor: 'Sensei Sofia Demetri 3rd Dan',
     address: 'Charles Major Centre, Duppas Hill Terrace, CR0 4BA',
     schedule: 'Thursdays 19:30 - 21:30',
   },
   {
     name: 'Yabane Yodokan',
-    instructor: 'Sensei Crusoe 3rd Dan',
+    instructor: 'Sensei Crusoe Robinson 3rd Dan',
     address: 'Emmanuel United Reform Church, West Wickham, BR4 9JS',
     schedule: 'Wednesdays 20:00 - 22:00',
+  },
+  {
+    name: 'Myoga Yodokan',
+    instructor: 'Sensei Danny Udvarlaky 2nd Dan',
+    address: 'Bromley Parish Church, Church Road, Bromley BR2 0EG',
+    schedule: 'Thursdays 20:00 - 21:30',
   },
 ];
 
@@ -54,7 +60,7 @@ export const SchoolsSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {schools.map((school) => (
             <div
               key={school.name}
