@@ -194,6 +194,29 @@ CREATE TABLE IF NOT EXISTS public.youtube_tokens (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Public website videos page, managed by admins from the members area.
+-- The seed rows live in migration 20261014000001 only; admins own the content.
+CREATE TABLE IF NOT EXISTS public.public_video_series (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS public.public_videos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  series_id UUID NOT NULL REFERENCES public.public_video_series(id) ON DELETE CASCADE,
+  youtube_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  thumbnail_url TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  uploader_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS public_videos_series_order_idx
+  ON public.public_videos (series_id, sort_order);
+
 
 -- -----------------------------------------------------------------------------
 -- Row level security
@@ -208,6 +231,53 @@ ALTER TABLE public.member_videos         ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.member_links          ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.member_documents      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.youtube_tokens        ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.public_video_series   ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.public_videos         ENABLE ROW LEVEL SECURITY;
+
+
+-- -----------------------------------------------------------------------------
+-- Table grants
+-- -----------------------------------------------------------------------------
+
+-- Since 2026-10-30 Supabase no longer auto-grants Data API access to new tables
+-- in "public", so a fresh project needs these to reach any table at all. RLS
+-- policies still decide which rows each role sees. GRANT only ever adds
+-- privileges, so re-running this against the live project changes nothing.
+-- Add every new table here, and grant it in the migration that creates it.
+
+-- Logged-out visitors only ever read the public videos page.
+GRANT SELECT ON
+  public.public_video_series,
+  public.public_videos
+TO anon;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON
+  public.profiles,
+  public.user_roles,
+  public.conversation_titles,
+  public.conversation_messages,
+  public.invitations,
+  public.member_videos,
+  public.member_links,
+  public.member_documents,
+  public.public_video_series,
+  public.public_videos
+TO authenticated;
+
+-- Edge Functions use the service role; youtube_tokens is reachable by it alone.
+GRANT SELECT, INSERT, UPDATE, DELETE ON
+  public.profiles,
+  public.user_roles,
+  public.conversation_titles,
+  public.conversation_messages,
+  public.invitations,
+  public.member_videos,
+  public.member_links,
+  public.member_documents,
+  public.youtube_tokens,
+  public.public_video_series,
+  public.public_videos
+TO service_role;
 
 
 -- -----------------------------------------------------------------------------
@@ -454,6 +524,49 @@ CREATE POLICY "Uploader or admin can delete member documents"
   USING (auth.uid() = uploader_id OR public.has_role(auth.uid(), 'admin'));
 
 -- youtube_tokens: intentionally has no policies — service role access only.
+
+-- public_video_series / public_videos: anyone (even logged out) reads, admins write.
+DROP POLICY IF EXISTS "Anyone can view public video series" ON public.public_video_series;
+CREATE POLICY "Anyone can view public video series"
+  ON public.public_video_series FOR SELECT
+  TO anon, authenticated USING (true);
+
+DROP POLICY IF EXISTS "Admins can insert public video series" ON public.public_video_series;
+CREATE POLICY "Admins can insert public video series"
+  ON public.public_video_series FOR INSERT
+  TO authenticated WITH CHECK (public.has_role(auth.uid(), 'admin'));
+
+DROP POLICY IF EXISTS "Admins can update public video series" ON public.public_video_series;
+CREATE POLICY "Admins can update public video series"
+  ON public.public_video_series FOR UPDATE
+  TO authenticated USING (public.has_role(auth.uid(), 'admin'))
+  WITH CHECK (public.has_role(auth.uid(), 'admin'));
+
+DROP POLICY IF EXISTS "Admins can delete public video series" ON public.public_video_series;
+CREATE POLICY "Admins can delete public video series"
+  ON public.public_video_series FOR DELETE
+  TO authenticated USING (public.has_role(auth.uid(), 'admin'));
+
+DROP POLICY IF EXISTS "Anyone can view public videos" ON public.public_videos;
+CREATE POLICY "Anyone can view public videos"
+  ON public.public_videos FOR SELECT
+  TO anon, authenticated USING (true);
+
+DROP POLICY IF EXISTS "Admins can insert public videos" ON public.public_videos;
+CREATE POLICY "Admins can insert public videos"
+  ON public.public_videos FOR INSERT
+  TO authenticated WITH CHECK (public.has_role(auth.uid(), 'admin'));
+
+DROP POLICY IF EXISTS "Admins can update public videos" ON public.public_videos;
+CREATE POLICY "Admins can update public videos"
+  ON public.public_videos FOR UPDATE
+  TO authenticated USING (public.has_role(auth.uid(), 'admin'))
+  WITH CHECK (public.has_role(auth.uid(), 'admin'));
+
+DROP POLICY IF EXISTS "Admins can delete public videos" ON public.public_videos;
+CREATE POLICY "Admins can delete public videos"
+  ON public.public_videos FOR DELETE
+  TO authenticated USING (public.has_role(auth.uid(), 'admin'));
 
 
 -- -----------------------------------------------------------------------------
