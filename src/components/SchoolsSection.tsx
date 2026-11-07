@@ -40,7 +40,7 @@ const schools = [
   {
     name: 'Myoga Yodokan',
     instructor: 'Sensei Danny Udvarlaky 2nd Dan',
-    address: 'Bromley Parish Church, Church Road, Bromley BR2 0EG',
+    address: 'The Youth Centre, Bromley Parish Church, Church Road, Bromley BR2 0EG',
     schedule: 'Thursdays 20:00 - 21:30',
   },
 ];
