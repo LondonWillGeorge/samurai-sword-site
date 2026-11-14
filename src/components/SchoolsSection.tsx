@@ -43,6 +43,12 @@ const schools = [
     address: 'The Youth Centre, Bromley Parish Church, Church Road, Bromley BR2 0EG',
     schedule: 'Thursdays 20:00 - 21:30',
   },
+  {
+    name: 'Kensho Yodokan',
+    instructor: 'Sensei Adam Bigden 2nd Dan',
+    address: 'Hempstead Village Hall (behind All Saints Church), 169 Hempstead Road, Hempstead, Gillingham, Kent ME7 3QG',
+    schedule: 'Thursdays 19:30 - 20:30 - then half hour extra from Jan 2027!',
+  },
 ];
 
 export const SchoolsSection = () => {
